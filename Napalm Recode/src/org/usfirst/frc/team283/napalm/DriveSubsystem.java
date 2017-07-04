@@ -24,6 +24,15 @@ public class DriveSubsystem
 		
 	}
 	
+	public void checkSlowmode()
+	{
+		
+	}
+	
+	public void checkGearshit()
+	{
+		
+	}
 	
 	
 	
