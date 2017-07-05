@@ -4,7 +4,8 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Napalm extends IterativeRobot //Back to master commit
+
+public class Napalm extends IterativeRobot //Post-Release merge comment
 {
 	
 	DriveSubsystem drivetrain;
