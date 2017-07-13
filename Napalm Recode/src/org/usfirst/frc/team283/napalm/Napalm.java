@@ -8,9 +8,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Napalm extends IterativeRobot //Post-Release merge comment
 {
-	//Intermediary Comment
+	//Subsystems
 	DriveSubsystem drivetrain;
 	GearSubsystem gearSubsystem;
+	//Functions
+	boolean driveTriggerBool;
 	//Controllers
 	Joystick xbox;
 	Joystick logitech;
@@ -42,7 +44,7 @@ public class Napalm extends IterativeRobot //Post-Release merge comment
 		driveLeftAxis = logitech.getRawAxis(1);
 		driveRightAxis = logitech.getRawAxis(5);
 		driveRightTrigger = logitech.getRawAxis(3);
-		
+		driveTriggerBool = false;
 		
 	}
 
@@ -67,8 +69,16 @@ public class Napalm extends IterativeRobot //Post-Release merge comment
 	@Override
 	public void teleopPeriodic() 
 	{
-		drivetrain.periodic(driveLeftAxis, driveRightAxis, driveRightTrigger, slowSpeed, buttonState);
-		
+		if(driveRightTrigger >= 0.5)
+		{
+			driveTriggerBool = true;
+		}
+		else
+		{
+			driveTriggerBool = false;
+		}
+		drivetrain.periodic(driveLeftAxis, driveRightAxis, driveRightTrigger, driveTriggerBool, buttonState);
+		gearSubsystem.periodic(gateSol, pushSol, pouchSol);
 	}
 }
 
