@@ -7,9 +7,7 @@ public class GearSubsystem
 	//Solenoids
 	Solenoid gate;
 	Solenoid push;
-	Solenoid pouch;
-	//Timers
-	
+	Solenoid pouch;	
 	
 	public GearSubsystem()
 	{
@@ -27,14 +25,6 @@ public class GearSubsystem
 		{
 			gate.set(false);
 		}
-		if(pushSol == true)
-		{
-			push.set(true);
-		}
-		else
-		{
-			push.set(false);
-		}
 		if(pouchSol == true)
 		{
 			pouch.set(true);
@@ -42,6 +32,14 @@ public class GearSubsystem
 		else
 		{
 			pouch.set(false);
+		}
+		if(pushSol == true)
+		{
+			//push.set(true);
+		}
+		else
+		{
+			//push.set(false);
 		}
 	}
 	
