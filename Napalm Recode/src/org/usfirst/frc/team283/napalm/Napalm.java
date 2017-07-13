@@ -17,10 +17,6 @@ public class Napalm extends IterativeRobot //Post-Release merge comment
 	Joystick xbox;
 	Joystick logitech;
 	//Driver
-		//Axes
-	double driveLeftAxis;
-	double driveRightAxis;
-	double driveRightTrigger;
 		//Buttons
 	boolean driveLeftBumper;
 	//Operator
@@ -39,13 +35,9 @@ public class Napalm extends IterativeRobot //Post-Release merge comment
 	{
 		drivetrain = new DriveSubsystem();
 		gearSubsystem = new GearSubsystem();
-		logitech = new Joystick(0);	
+		logitech = new Joystick(0);	//replace with constant
 		xbox = new Joystick(1);
-		driveLeftAxis = logitech.getRawAxis(1);
-		driveRightAxis = logitech.getRawAxis(5);
-		driveRightTrigger = logitech.getRawAxis(3);
-		driveTriggerBool = false;
-		
+
 	}
 
 	@Override
@@ -69,15 +61,7 @@ public class Napalm extends IterativeRobot //Post-Release merge comment
 	@Override
 	public void teleopPeriodic() 
 	{
-		if(driveRightTrigger >= 0.5)
-		{
-			driveTriggerBool = true;
-		}
-		else
-		{
-			driveTriggerBool = false;
-		}
-		drivetrain.periodic(driveLeftAxis, driveRightAxis, driveRightTrigger, driveTriggerBool, buttonState);
+		drivetrain.periodic(driveLeftAxis, driveRightAxis, driveRightTrigger, (logitech.getRawAxis(3) >= 0.5), buttonState);
 		gearSubsystem.periodic(gateSol, pushSol, pouchSol);
 	}
 }

@@ -6,9 +6,9 @@ import edu.wpi.first.wpilibj.Timer;
 public class GearSubsystem 
 {
 	//Solenoids
-	Solenoid gate;
-	Solenoid push;
-	Solenoid pouch;
+	Solenoid gateSol;
+	Solenoid pushSol;
+	Solenoid pouchSol;
 	//Timers
 	Timer pushTimer;
 	Timer closeTimer;
@@ -16,64 +16,65 @@ public class GearSubsystem
 	boolean storedState = false;
 	public GearSubsystem()
 	{
-		gate = new Solenoid(Constants.GEAR_GATE_SOLENOID_PORT);
-		push = new Solenoid(Constants.GEAR_PUSH_SOLENOID_PORT);
-		pouch = new Solenoid(Constants.GEAR_POUCH_SOLENOID_PORT);
+		gateSol = new Solenoid(Constants.GEAR_GATE_SOLENOID_PORT);
+		pushSol = new Solenoid(Constants.GEAR_PUSH_SOLENOID_PORT);
+		pouchSol = new Solenoid(Constants.GEAR_POUCH_SOLENOID_PORT);
 		pushTimer = new Timer();
 		closeTimer = new Timer();
 	}
-	public void periodic(boolean gateSol, boolean pushSol, boolean pouchSol)
+	public void periodic(boolean gateSolState, boolean pushSolState, boolean pouchSolState)
 	{
-		if(pushSol == false && storedState == false)
+		if(pushSolState == false && storedState == false)
 		{
-			if(gateSol == true)
+			if(gateSolState == true)
 			{
-				gate.set(true);
+				gateSol.set(true);
 			}
 			else
 			{
-				gate.set(false);
+				gateSol.set(false);
 			}
-			if(pouchSol == true)
+			if(pouchSolState == true)
 			{
-				pouch.set(true);
+				pouchSol.set(true);
 			}
 			else
 			{
-				pouch.set(false);
+				pouchSol.set(false);
 			}
 		}
-		else if(pushSol == true)
+		else if(pushSolState == true)
 		{
 			
 			if(storedState == false && pushTimer.get() <= 0.5)
 			{
 				pushTimer.start();
-				gate.set(true);
+				gateSol.set(true);
 			}
 			else if(storedState == true && pushTimer.get() >= 0.5)
 			{
-				push.set(true);
+				pushSol.set(true);
 				pushTimer.stop();
 				pushTimer.reset();
 			}
 		}
-		else if(pushSol == false && storedState == true)
+		else if(pushSolState == false && storedState == true)
 		{
 			if(closeTimer.get() <= 0.5)
 			{
-				push.set(false);
-				pouch.set(true);
+				pushSol.set(false);
+				pouchSol.set(true);
 				closeTimer.start();
 			}
 			else if(closeTimer.get() >= 0.5)
 			{
-				pouch.set(false);
+				pouchSol.set(false);
+				gateSol.set(false);
 				closeTimer.stop();
 				closeTimer.reset();
 			}
 		}
-		storedState = pushSol;
+		storedState = pushSolState;
 	}
 	
 	
