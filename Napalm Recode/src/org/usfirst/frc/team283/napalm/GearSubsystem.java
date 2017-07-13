@@ -1,48 +1,80 @@
 package org.usfirst.frc.team283.napalm;
 
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
 
 public class GearSubsystem 
 {
 	//Solenoids
-	Solenoid gate;
-	Solenoid push;
-	Solenoid pouch;
+	Solenoid gateSol;
+	Solenoid pushSol;
+	Solenoid pouchSol;
 	//Timers
+	Timer pushTimer;
+	Timer closeTimer;
 	
-	
+	boolean storedState = false;
 	public GearSubsystem()
 	{
-		gate = new Solenoid(Constants.GEAR_GATE_SOLENOID_PORT);
-		push = new Solenoid(Constants.GEAR_PUSH_SOLENOID_PORT);
-		pouch = new Solenoid(Constants.GEAR_POUCH_SOLENOID_PORT);
+		gateSol = new Solenoid(Constants.GEAR_GATE_SOLENOID_PORT);
+		pushSol = new Solenoid(Constants.GEAR_PUSH_SOLENOID_PORT);
+		pouchSol = new Solenoid(Constants.GEAR_POUCH_SOLENOID_PORT);
+		pushTimer = new Timer();
+		closeTimer = new Timer();
 	}
-	public void periodic(boolean gateSol, boolean pushSol, boolean pouchSol)
+	public void periodic(boolean gateSolState, boolean pushSolState, boolean pouchSolState)
 	{
-		if(gateSol == true)
+		if(pushSolState == false && storedState == false)
 		{
-			gate.set(true);
+			if(gateSolState == true)
+			{
+				gateSol.set(true);
+			}
+			else
+			{
+				gateSol.set(false);
+			}
+			if(pouchSolState == true)
+			{
+				pouchSol.set(true);
+			}
+			else
+			{
+				pouchSol.set(false);
+			}
 		}
-		else
+		else if(pushSolState == true)
 		{
-			gate.set(false);
+			
+			if(storedState == false && pushTimer.get() <= 0.5)
+			{
+				pushTimer.start();
+				gateSol.set(true);
+			}
+			else if(storedState == true && pushTimer.get() >= 0.5)
+			{
+				pushSol.set(true);
+				pushTimer.stop();
+				pushTimer.reset();
+			}
 		}
-		if(pushSol == true)
+		else if(pushSolState == false && storedState == true)
 		{
-			push.set(true);
+			if(closeTimer.get() <= 0.5)
+			{
+				pushSol.set(false);
+				pouchSol.set(true);
+				closeTimer.start();
+			}
+			else if(closeTimer.get() >= 0.5)
+			{
+				pouchSol.set(false);
+				gateSol.set(false);
+				closeTimer.stop();
+				closeTimer.reset();
+			}
 		}
-		else
-		{
-			push.set(false);
-		}
-		if(pouchSol == true)
-		{
-			pouch.set(true);
-		}
-		else
-		{
-			pouch.set(false);
-		}
+		storedState = pushSolState;
 	}
 	
 	

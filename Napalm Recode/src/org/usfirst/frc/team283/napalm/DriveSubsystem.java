@@ -9,7 +9,7 @@ public class DriveSubsystem
 	private static final double DEADZONE = 0.1;
 	private static final double SLOWSPEED = 0.5;
 	//Variable States
-	private static boolean storedState = false;	
+	private static boolean slowspeedBuffer = false;	
 	//Motors
 	Spark leftController;
 	Spark rightController;
@@ -28,12 +28,19 @@ public class DriveSubsystem
 	public void periodic(float leftMagnitude, float rightMagnitude, float triggerMagnitude, boolean slowSpeed, boolean buttonState)
 	{
 		Lift.periodic(triggerMagnitude);
-		if(buttonState == true && storedState == false)
+		if(buttonState == true && slowspeedBuffer == false)
 		{
 			gearShift.set(!gearShift.get());
 		}
-		storedState = buttonState;
-		if(((leftMagnitude >= DEADZONE) || (leftMagnitude <= (-1 * DEADZONE))) && slowSpeed == false)
+		slowspeedBuffer = buttonState;
+		
+		if(slowSpeed == false)
+		{
+			leftController.set(Rescaler.rescale(DEADZONE, 1.0, 0.0, 1.0, leftMagnitude));
+			rightController.set(Rescaler.rescale(DEADZONE, 1.0, 0.0, 1.0, rightMagnitude));
+		}
+		
+		/*if(((leftMagnitude >= DEADZONE) || (leftMagnitude <= (-1 * DEADZONE))) && slowSpeed == false)
 		{
 			leftController.set(leftMagnitude);
 		}
@@ -56,6 +63,6 @@ public class DriveSubsystem
 		else
 		{
 			rightController.set(0);
-		}
+		}*/
 	}
 }
