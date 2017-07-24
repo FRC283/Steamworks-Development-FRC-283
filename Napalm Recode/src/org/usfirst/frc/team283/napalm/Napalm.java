@@ -8,36 +8,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Napalm extends IterativeRobot //Post-Release merge comment
 {
-	//Subsystems
 	DriveSubsystem drivetrain;
 	GearSubsystem gearSubsystem;
-	//Functions
-	boolean driveTriggerBool;
-	//Controllers
 	Joystick xbox;
 	Joystick logitech;
-	//Driver
-		//Buttons
-	boolean driveLeftBumper;
-	//Operator
-		//Axes
-	float opRightTigger;
-	float opLeftTrigger;
-		//Buttons
-	boolean opAButton;
-	boolean opYButton;
-	boolean opXButton;
-	boolean opLeftBumper;
-	boolean opRightBumper;	
+
+	boolean driveTriggerBool;
 	
+	boolean driveLeftBumper;
+		
 	@Override
 	public void robotInit() 
 	{
 		drivetrain = new DriveSubsystem();
 		gearSubsystem = new GearSubsystem();
-		logitech = new Joystick(0);	//replace with constant
-		xbox = new Joystick(1);
-
+		logitech = new Joystick(Constants.DRIVER_CONTROLLER_PORT);
+		xbox = new Joystick(Constants.OPERATOR_CONTROLLER_PORT);
 	}
 
 	@Override
@@ -61,7 +47,7 @@ public class Napalm extends IterativeRobot //Post-Release merge comment
 	@Override
 	public void teleopPeriodic() 
 	{
-		drivetrain.periodic(driveLeftAxis, driveRightAxis, driveRightTrigger, (logitech.getRawAxis(3) >= 0.5), buttonState);
+		drivetrain.periodic(logitech.getRawAxis(LEFT), logitech.getRawAxis(RIGHT), driveRightTrigger, (logitech.getRawAxis(3) >= 0.5), buttonState);
 		gearSubsystem.periodic(gateSol, pushSol, pouchSol);
 	}
 }

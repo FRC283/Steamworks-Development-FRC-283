@@ -3,7 +3,7 @@ package org.usfirst.frc.team283.napalm;
 public abstract class Constants 
 {
 	//Computer Ports
-		//Controller Ports
+	//Controller Ports
 			public static final int DRIVER_CONTROLLER_PORT = 0;
 			public static final int OPERATOR_CONTROLLER_PORT = 1;
 	//Robot Ports

@@ -1,14 +1,13 @@
 package org.usfirst.frc.team283.napalm;
 
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.Talon;
 
 public class DriveSubsystem
-{				//Test
+{				
 	//Constants
 	private static final double DEADZONE = 0.1;
 	private static final double SLOWSPEED = 0.5;
-	//Variable States
+	
 	private static boolean slowspeedBuffer = false;	
 	//Motors
 	Spark leftController;
@@ -17,6 +16,7 @@ public class DriveSubsystem
 	Solenoid gearShift;
 	//Subsystems
 	Lift Lift;
+	
 	public DriveSubsystem()
 	{
 		leftController = new Spark(Constants.LEFT_DRIVE_CONTROLLER_PORT);
@@ -25,14 +25,14 @@ public class DriveSubsystem
 		Lift = new Lift();
 	}
 	
-	public void periodic(float leftMagnitude, float rightMagnitude, float triggerMagnitude, boolean slowSpeed, boolean buttonState)
+	public void periodic(float leftMagnitude, float rightMagnitude, float triggerMagnitude, boolean slowSpeed, boolean gearButtonState)
 	{
 		Lift.periodic(triggerMagnitude);
-		if(buttonState == true && slowspeedBuffer == false)
+		if(gearButtonState == true && slowspeedBuffer == false)
 		{
 			gearShift.set(!gearShift.get());
 		}
-		slowspeedBuffer = buttonState;
+		slowspeedBuffer = gearButtonState;
 		
 		if(slowSpeed == false)
 		{
