@@ -22,7 +22,7 @@ public class GearSubsystem
 		pushTimer = new Timer();
 		closeTimer = new Timer();
 	}
-	public void periodic(boolean gateSolState, boolean pushSolState, boolean pouchSolState)
+	public void periodic(boolean pushSolState, boolean pouchSolState)
 	{
 		if(pushSolState == false && storedState == false)
 		{
