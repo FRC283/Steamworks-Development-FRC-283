@@ -50,7 +50,9 @@ public class Napalm extends IterativeRobot //Post-Release merge comment
 		drivetrain.drive(logitech.getRawAxis(Constants.LEFT_Y), logitech.getRawAxis(Constants.RIGHT_Y),(logitech.getRawAxis(Constants.RIGHT_TRIGGER) >= 0.5));
 		drivetrain.lift(xbox.getRawAxis(Constants.RIGHT_TRIGGER));
 		drivetrain.shiftGear(logitech.getRawButton(Constants.LEFT_BUMPER));
-		gearSubsystem.periodic(pushSol, pouchSol);
+		gearSubsystem.pouch(xbox.getRawButton(Constants.RIGHT_BUMPER));
+		//UNKNOWN IF LOCKOUT IS CORRECT
+		gearSubsystem.release(xbox.getRawButton(Constants.LEFT_BUMPER));
 		shooterSubsystem.aim(xbox.getRawAxis(Constants.RIGHT_X));
 	}
 }
