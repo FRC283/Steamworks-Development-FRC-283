@@ -13,7 +13,8 @@ public class GearSubsystem
 	Timer pushTimer;
 	Timer closeTimer;
 	
-	boolean storedState = false;
+	boolean rButtonStateBuffer = false;
+	
 	public GearSubsystem()
 	{
 		gateSol = new Solenoid(Constants.GEAR_GATE_SOLENOID_PORT);
@@ -22,7 +23,7 @@ public class GearSubsystem
 		pushTimer = new Timer();
 		closeTimer = new Timer();
 	}
-	public void periodic(boolean gateSolState, boolean pushSolState, boolean pouchSolState)
+	public void periodic(boolean pushSolState, boolean pouchSolState)
 	{
 		if(pushSolState == false && storedState == false)
 		{
@@ -75,5 +76,57 @@ public class GearSubsystem
 			}
 		}
 		storedState = pushSolState;
+	}
+	
+	/**
+	 * toggle of the pouch of the robot
+	 * @param pButtonState - The state of the button assigned to this function in the Napalm class
+	 */
+	public void pouch(boolean pButtonState)
+	{
+		pouchSol.set(pButtonState);
+	}
+	
+	/**
+	 * When the assigned button is pressed, this function controls the robot to release the gear
+	 * When the button is released, it reverses the process
+	 * @param rButtonState - THe button state for this function
+	 */
+	public void release(boolean rButtonState)
+	{
+		if (rButtonStateBuffer == false && rButtonState == true) //Press Event
+		{
+			if (pouchSol.get() == false) //If the pouch is closed (which it should be)
+			{
+				gateSol.set(true); //Open the 'gates' (pincers)
+				pushTimer.start(); //Start waiting
+			}
+		}
+		if (rButtonStateBuffer == true && rButtonState == true)
+		{
+			if (pushTimer.get() > SOME_CONSTANT && gateSol.get() == true) //After time has past, and the pincers/gate are open
+			{
+				pushTimer.stop();
+				pushTimer.reset();
+				pushSol.set(true); //Extend push device
+			}
+		}
+		if (rButtonStateBuffer == true && rButtonState == false) //Release Event
+		{
+			pushSol.set(false); //Retract push device
+			pouchSol.set(true); //Open the pouch (Yes, this is unintuitive)
+			closeTimer.start();
+		}
+		if (rButtonStateBuffer == false && rButtonState == false)
+		{
+			if (closeTimer.get() > SOME_OTHER_CONSTANT) //After time has past
+			{
+				closeTimer.stop();
+				closeTimer.reset();
+				gateSol.set(false); //Close the pincers/gate
+				pouchSol.set(false); //CLose the pouch
+			}
+		}
+		rButtonStateBuffer = rButtonState; //Update the buffer to the new position
 	}
 }

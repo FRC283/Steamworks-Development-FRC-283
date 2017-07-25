@@ -10,18 +10,18 @@ public class Napalm extends IterativeRobot //Post-Release merge comment
 {
 	DriveSubsystem drivetrain;
 	GearSubsystem gearSubsystem;
+	ShooterSubsystem shooterSubsystem;
+	
 	Joystick xbox;
 	Joystick logitech;
-
-	boolean driveTriggerBool;
 	
-	boolean driveLeftBumper;
-		
 	@Override
 	public void robotInit() 
 	{
 		drivetrain = new DriveSubsystem();
 		gearSubsystem = new GearSubsystem();
+		shooterSubsystem = new ShooterSubsystem();
+		
 		logitech = new Joystick(Constants.DRIVER_CONTROLLER_PORT);
 		xbox = new Joystick(Constants.OPERATOR_CONTROLLER_PORT);
 	}
@@ -47,8 +47,13 @@ public class Napalm extends IterativeRobot //Post-Release merge comment
 	@Override
 	public void teleopPeriodic() 
 	{
-		drivetrain.periodic(logitech.getRawAxis(LEFT), logitech.getRawAxis(RIGHT), driveRightTrigger, (logitech.getRawAxis(3) >= 0.5), buttonState);
-		gearSubsystem.periodic(gateSol, pushSol, pouchSol);
+		drivetrain.drive(logitech.getRawAxis(Constants.LEFT_Y), logitech.getRawAxis(Constants.RIGHT_Y),(logitech.getRawAxis(Constants.RIGHT_TRIGGER) >= 0.5));
+		drivetrain.lift(xbox.getRawAxis(Constants.RIGHT_TRIGGER));
+		drivetrain.shiftGear(logitech.getRawButton(Constants.LEFT_BUMPER));
+		gearSubsystem.pouch(xbox.getRawButton(Constants.RIGHT_BUMPER));
+		//UNKNOWN IF LOCKOUT IS CORRECT
+		gearSubsystem.release(xbox.getRawButton(Constants.LEFT_BUMPER));
+		shooterSubsystem.aim(xbox.getRawAxis(Constants.RIGHT_X));
 	}
 }
 
