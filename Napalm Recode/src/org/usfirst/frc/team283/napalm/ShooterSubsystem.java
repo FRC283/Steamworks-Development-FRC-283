@@ -9,7 +9,7 @@ public class ShooterSubsystem
 	//Constants
 	/** The speed at which the hopper and feed motors run */
 	private final float FEED_SPEED = 1; 
-	
+	//
 	ShooterSubsystem()
 	{
 		Hopper hopper = new Hopper();
