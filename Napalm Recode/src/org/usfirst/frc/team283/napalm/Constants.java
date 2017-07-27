@@ -3,7 +3,6 @@ package org.usfirst.frc.team283.napalm;
 public abstract class Constants 
 {
 	//Computer Ports
-<<<<<<< HEAD
 		public static final int DRIVER_CONTROLLER_PORT = 0;
 		public static final int OPERATOR_CONTROLLER_PORT = 1;
 	//Controller Ports
@@ -25,14 +24,10 @@ public abstract class Constants
 			public static final int RIGHT_TRIGGER = 3;
 			public static final int RIGHT_X = 4;
 			public static final int RIGHT_Y = 5;
-=======
-	
->>>>>>> branch 'master' of https://github.com/Benr444/Napalm-Java-FRC-283
 	//Robot Ports
 		//PWM
-			public static final int LEFT_DRIVE_CONTROLER_PORT = 0;
+			public static final int LEFT_DRIVE_CONTROLLER_PORT = 0;
 			public static final int RIGHT_DRIVE_CONTROLER_PORT = 1;
-<<<<<<< HEAD
 			public static final int TURRET_CONTROLLER_PORT = 3;
 			public static final int HOPPER_CONTROLLER_PORT = 4;
 			public static final int CLIMB_CONTROLLER_PORT = 5;
@@ -51,6 +46,4 @@ public abstract class Constants
 			public static final int CCW_LIMIT_SWITCH_PORT = 3;
 			public static final int RIGHT_DRIVE_ENCODER_PORT_A = 7;
 			public static final int RIGHT_DRIVE_ENCODER_PORT_B = 8;
-=======
->>>>>>> branch 'master' of https://github.com/Benr444/Napalm-Java-FRC-283
 }

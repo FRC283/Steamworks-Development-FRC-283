@@ -1,14 +1,8 @@
 package org.usfirst.frc.team283.napalm;
-<<<<<<< HEAD
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
-=======
 
-public class GearSubsystem {
->>>>>>> branch 'master' of https://github.com/Benr444/Napalm-Java-FRC-283
-
-<<<<<<< HEAD
 public class GearSubsystem 
 {
 	//Solenoids
@@ -135,6 +129,4 @@ public class GearSubsystem
 		}
 		rButtonStateBuffer = rButtonState; //Update the buffer to the new position
 	}
-=======
->>>>>>> branch 'master' of https://github.com/Benr444/Napalm-Java-FRC-283
 }
