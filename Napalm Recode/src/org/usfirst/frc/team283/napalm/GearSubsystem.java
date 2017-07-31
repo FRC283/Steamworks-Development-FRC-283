@@ -12,8 +12,12 @@ public class GearSubsystem
 	//Timers
 	Timer pushTimer;
 	Timer closeTimer;
-	
+	//Constants
+	double pushTime = 0.5;
+	double closeTime = 1.0;
+	//Variables
 	boolean rButtonStateBuffer = false;
+	boolean pushSequence = false;
 	
 	public GearSubsystem()
 	{
@@ -25,7 +29,7 @@ public class GearSubsystem
 	}
 	public void periodic(boolean pushSolState, boolean pouchSolState)
 	{
-		if(pushSolState == false && storedState == false)
+	/*	if(pushSolState == false && storedState == false)
 		{
 			if(gateSolState == true)
 			{
@@ -75,7 +79,7 @@ public class GearSubsystem
 				closeTimer.reset();
 			}
 		}
-		storedState = pushSolState;
+		storedState = pushSolState;*/
 	}
 	
 	/**
@@ -84,7 +88,10 @@ public class GearSubsystem
 	 */
 	public void pouch(boolean pButtonState)
 	{
-		pouchSol.set(pButtonState);
+		if(pushSequence = false)
+		{
+			pouchSol.set(pButtonState);
+		}
 	}
 	
 	/**
@@ -100,11 +107,12 @@ public class GearSubsystem
 			{
 				gateSol.set(true); //Open the 'gates' (pincers)
 				pushTimer.start(); //Start waiting
+				pushSequence = true;// Locks other functions in this class
 			}
 		}
 		if (rButtonStateBuffer == true && rButtonState == true)
 		{
-			if (pushTimer.get() > SOME_CONSTANT && gateSol.get() == true) //After time has past, and the pincers/gate are open
+			if (pushTimer.get() > pushTime && gateSol.get() == true) //After time has past, and the pincers/gate are open
 			{
 				pushTimer.stop();
 				pushTimer.reset();
@@ -119,12 +127,13 @@ public class GearSubsystem
 		}
 		if (rButtonStateBuffer == false && rButtonState == false)
 		{
-			if (closeTimer.get() > SOME_OTHER_CONSTANT) //After time has past
+			if (closeTimer.get() > closeTime) //After time has past
 			{
 				closeTimer.stop();
 				closeTimer.reset();
 				gateSol.set(false); //Close the pincers/gate
 				pouchSol.set(false); //CLose the pouch
+				pushSequence = false; //Opens other functions in this class
 			}
 		}
 		rButtonStateBuffer = rButtonState; //Update the buffer to the new position
