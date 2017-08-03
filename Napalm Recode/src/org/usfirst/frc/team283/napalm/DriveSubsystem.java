@@ -1,6 +1,6 @@
 
 package org.usfirst.frc.team283.napalm;
-import org.usfirst.frc.team283.napalm.JoystickSchema.Schema;
+import org.usfirst.frc.team283.napalm.Scheme.Schema;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Spark;
@@ -33,9 +33,9 @@ public class DriveSubsystem
 		
 	}
 	
-	@Schema(JoystickSchema.LEFT_Y)
-	@Schema(JoystickSchema.RIGHT_Y)
-	@Schema(value = JoystickSchema.RIGHT_TRIGGER, desc = SLOWSPEED + " speed")
+	@Schema(Scheme.LEFT_Y)
+	@Schema(Scheme.RIGHT_Y)
+	@Schema(value = Scheme.RIGHT_TRIGGER, desc = SLOWSPEED + " speed")
 	/**
 	 * 
 	 * @param leftMagnitude
@@ -48,7 +48,7 @@ public class DriveSubsystem
 		rightController.set( (Rescaler.rescale(DEADZONE, 1.0, 0.0, 1.0, rightMagnitude)) * (slowSpeed ? SLOWSPEED : 1));
 	}
 	
-	@Schema(JoystickSchema.LEFT_BUMPER)
+	@Schema(Scheme.LEFT_BUMPER)
 	/**
 	 * 
 	 * @param gearButtonState

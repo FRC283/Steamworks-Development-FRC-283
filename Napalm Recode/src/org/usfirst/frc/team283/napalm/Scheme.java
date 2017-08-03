@@ -18,12 +18,12 @@ import javax.imageio.ImageIO;
  * The purpose of this class is to read annotations and generate a schema image based on those annotations
  * @author Benjamin
  */
-public class JoystickSchema
+public class Scheme
 {
 	public static void main(String[] args)
 	{
-		JoystickSchema js = new JoystickSchema("Napalm", "org.usfirst.frc.team283.napalm.DriveSubsystem", "org.usfirst.frc.team283.napalm.GearSubsystem", "org.usfirst.frc.team283.napalm.ShooterSubsystem");
-		js.generate();
+		Scheme s = new Scheme("Napalm", "org.usfirst.frc.team283.napalm.DriveSubsystem", "org.usfirst.frc.team283.napalm.GearSubsystem", "org.usfirst.frc.team283.napalm.ShooterSubsystem");
+		s.generate();
 	}
 	
 	//Logitech Ports (Default)
@@ -120,7 +120,7 @@ public class JoystickSchema
 	 * @param classNames - List of class names
 	 * @param title - Name of robot
 	 */
-	JoystickSchema(String title, String... classNames)
+	Scheme(String title, String... classNames)
 	{
 		this.robotName = title;
 		for (int i = 0; i < classNames.length; i++)
@@ -142,7 +142,7 @@ public class JoystickSchema
 	 * @param classInstances - List of objects of desired classes
 	 * @param title - printed at the top of schema
 	 */
-	JoystickSchema(String title, Object... classInstances)
+	Scheme(String title, Object... classInstances)
 	{
 		for (int i = 0; i < classInstances.length; i++)
 		{
@@ -177,21 +177,18 @@ public class JoystickSchema
 		
 				for (Method m : methods)
 				{
-					System.out.println("Currently checking Annotations of method: " + m.getName());
 					Schemas allSchemas = m.getAnnotation(Schemas.class);
-					System.out.println("Detected raw annots: " + allSchemas);
 					if (allSchemas != null)
 					{
 						for (Schema s : allSchemas.value())
 						{
+							System.out.println("Functions Tagged: " + m.getName());
 							if (s.desc().equals(""))
 							{
-								System.out.println("blank");
 								g.drawString(m.getName(), LABEL_BASE_X, LABEL_BASE_Y + (s.value() * LABEL_INCR));
 							}
 							else
 							{
-								System.out.println("desc: " + s.desc());
 								g.drawString(s.desc(), LABEL_BASE_X, LABEL_BASE_Y + (s.value() * LABEL_INCR));
 							}
 						}
