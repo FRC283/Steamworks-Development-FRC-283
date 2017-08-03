@@ -27,61 +27,8 @@ public class GearSubsystem
 		pushTimer = new Timer();
 		closeTimer = new Timer();
 	}
-	public void periodic(boolean pushSolState, boolean pouchSolState)
-	{
-	/*	if(pushSolState == false && storedState == false)
-		{
-			if(gateSolState == true)
-			{
-				gateSol.set(true);
-			}
-			else
-			{
-				gateSol.set(false);
-			}
-			if(pouchSolState == true)
-			{
-				pouchSol.set(true);
-			}
-			else
-			{
-				pouchSol.set(false);
-			}
-		}
-		else if(pushSolState == true)
-		{
-			
-			if(storedState == false && pushTimer.get() <= 0.5)
-			{
-				pushTimer.start();
-				gateSol.set(true);
-			}
-			else if(storedState == true && pushTimer.get() >= 0.5)
-			{
-				pushSol.set(true);
-				pushTimer.stop();
-				pushTimer.reset();
-			}
-		}
-		else if(pushSolState == false && storedState == true)
-		{
-			if(closeTimer.get() <= 0.5)
-			{
-				pushSol.set(false);
-				pouchSol.set(true);
-				closeTimer.start();
-			}
-			else if(closeTimer.get() >= 0.5)
-			{
-				pouchSol.set(false);
-				gateSol.set(false);
-				closeTimer.stop();
-				closeTimer.reset();
-			}
-		}
-		storedState = pushSolState;*/
-	}
 	
+	//Xbox @Schema(JoystickSchema.LEFT_BUMPER)
 	/**
 	 * toggle of the pouch of the robot
 	 * @param pButtonState - The state of the button assigned to this function in the Napalm class
@@ -94,6 +41,7 @@ public class GearSubsystem
 		}
 	}
 	
+	//XBOX @Schema(JoystickSchema.LEFT_BUMPER)
 	/**
 	 * When the assigned button is pressed, this function controls the robot to release the gear
 	 * When the button is released, it reverses the process
