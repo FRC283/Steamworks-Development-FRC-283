@@ -9,7 +9,7 @@ public class DriveSubsystem
 	/** Minimum value for driving on logitech axis */
 	private static final double DEADZONE = 0.1;
 	/** Minimum value for logitech trigger for climb */
-	private static final double TRIGGER_DEADZONE = 0.1;
+	private static final double TRIGGER_DEADZONE = 0.5;
 	/** The value motor speeds are multiplied by when slowspeed is enabled */
 	private static final double SLOWSPEED = 0.5;
 	
@@ -39,7 +39,7 @@ public class DriveSubsystem
 	 */
 	public void drive(double leftMagnitude, double rightMagnitude, boolean slowSpeed)
 	{
-		leftController.set( (Rescaler.rescale(DEADZONE, 1.0, 0.0, 1.0, leftMagnitude)) * (slowSpeed ? SLOWSPEED : 1));
+		leftController.set(-1 * (Rescaler.rescale(DEADZONE, 1.0, 0.0, 1.0, leftMagnitude)) * (slowSpeed ? SLOWSPEED : 1));
 		rightController.set( (Rescaler.rescale(DEADZONE, 1.0, 0.0, 1.0, rightMagnitude)) * (slowSpeed ? SLOWSPEED : 1));
 	}
 	
@@ -62,9 +62,6 @@ public class DriveSubsystem
 	 */
 	public void lift(double triggerMagnitude)
 	{
-		if(triggerMagnitude > TRIGGER_DEADZONE) //If the trigger is pushed down past a certain point
-		{
-			climbSpark.set(-1 * triggerMagnitude); //Set to climb the value of the trigger (Reverse-wired motor)
-		}
+		climbSpark.set(triggerMagnitude > TRIGGER_DEADZONE ? -1 * triggerMagnitude : 0); //Set to climb the value of the trigger (Reverse-wired motor)
 	}
 }

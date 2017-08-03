@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-public class Napalm extends IterativeRobot //Post-Release merge comment
+public class Robot extends IterativeRobot //Post-Release merge comment
 {
 	DriveSubsystem drivetrain;
 	GearSubsystem gearSubsystem;
@@ -44,6 +44,7 @@ public class Napalm extends IterativeRobot //Post-Release merge comment
 		
 	}
 	
+	
 	@Override
 	public void teleopPeriodic() 
 	{
@@ -54,6 +55,10 @@ public class Napalm extends IterativeRobot //Post-Release merge comment
 		//UNKNOWN IF LOCKOUT IS CORRECT
 		gearSubsystem.release(xbox.getRawButton(Constants.LEFT_BUMPER));
 		shooterSubsystem.aim(xbox.getRawAxis(Constants.RIGHT_X));
+		
+		//Printouts:
+		System.out.println("State of Shift Button: " + xbox.getRawButton(Constants.LEFT_BUMPER));
+		System.out.println("====================");
 	}
 }
 
