@@ -2,9 +2,6 @@ package org.usfirst.frc.team283.napalm;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 
 public class Robot extends IterativeRobot //Post-Release merge comment
 {

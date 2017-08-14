@@ -62,7 +62,7 @@ public class DriveSubsystem
 		gearShiftBuffer = gearButtonState;
 	}
 	
-	//ON XBOX @Schema(JoystickSchema.RIGHT_TRIGGER)
+	@Schema(Scheme.XBOX_RIGHT_TRIGGER)
 	/**
 	 * 
 	 * @param triggerMagnitude

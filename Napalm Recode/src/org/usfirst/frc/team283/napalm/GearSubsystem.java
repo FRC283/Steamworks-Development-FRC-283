@@ -1,4 +1,6 @@
 package org.usfirst.frc.team283.napalm;
+import org.usfirst.frc.team283.napalm.Scheme.Schema;
+
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -28,7 +30,7 @@ public class GearSubsystem
 		closeTimer = new Timer();
 	}
 	
-	//Xbox @Schema(JoystickSchema.LEFT_BUMPER)
+	@Schema(Scheme.XBOX_RIGHT_BUMPER)
 	/**
 	 * toggle of the pouch of the robot
 	 * @param pButtonState - The state of the button assigned to this function in the Napalm class
@@ -41,7 +43,7 @@ public class GearSubsystem
 		}
 	}
 	
-	//XBOX @Schema(JoystickSchema.LEFT_BUMPER)
+	@Schema(Scheme.XBOX_LEFT_BUMPER)
 	/**
 	 * When the assigned button is pressed, this function controls the robot to release the gear
 	 * When the button is released, it reverses the process
