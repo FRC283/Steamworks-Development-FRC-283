@@ -11,7 +11,7 @@ public class DriveSubsystem
 	/** Minimum value for driving on logitech axis */
 	private static final double DEADZONE = 0.1;
 	/** Minimum value for logitech trigger for climb */
-	private static final double TRIGGER_DEADZONE = 0.5;
+	private static final double TRIGGER_DEADZONE = 0;
 	/** The value motor speeds are multiplied by when slowspeed is enabled */
 	private static final double SLOWSPEED = 0.5;
 	
