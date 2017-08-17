@@ -16,7 +16,8 @@ import javax.imageio.ImageIO;
 
 /**
  * The purpose of this class is to read annotations and generate a schema image based on those annotations
- * @author Benjamin
+ * @author Benjamin G. Ranson
+ * @version 1.1
  */
 public class Scheme
 {

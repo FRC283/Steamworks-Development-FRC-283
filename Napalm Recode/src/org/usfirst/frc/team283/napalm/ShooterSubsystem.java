@@ -9,7 +9,9 @@ public class ShooterSubsystem
 	//Constants
 	/** The speed at which the hopper and feed motors run */
 	private final float FEED_SPEED = 1; 
-	//
+	
+
+	
 	ShooterSubsystem()
 	{
 		Hopper hopper = new Hopper();
@@ -24,15 +26,6 @@ public class ShooterSubsystem
 	}
 	
 	public void speed(float stickPosition) //Cumulatively adjusts flywheel speed based on input
-	{
-		
-	}
-	
-	/**
-	 * Adjusts speed of yaw motor based on input of turret
-	 * @param stickPosition - Adjusts the rate of yaw turning
-	 */
-	public void aim(double stickPosition)
 	{
 		
 	}
