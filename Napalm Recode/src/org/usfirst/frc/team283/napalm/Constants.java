@@ -46,4 +46,5 @@ public abstract class Constants
 			public static final int CCW_LIMIT_SWITCH_PORT = 3;
 			public static final int RIGHT_DRIVE_ENCODER_PORT_A = 7;
 			public static final int RIGHT_DRIVE_ENCODER_PORT_B = 8;
+			//Find flywheel encoder ports
 }
