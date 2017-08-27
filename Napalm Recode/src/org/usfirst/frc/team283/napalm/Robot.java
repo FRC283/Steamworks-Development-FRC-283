@@ -51,7 +51,7 @@ public class Robot extends IterativeRobot //Post-Release merge comment
 		gearSubsystem.pouch(xbox.getRawButton(Constants.RIGHT_BUMPER));
 		//UNKNOWN IF LOCKOUT IS CORRECT
 		gearSubsystem.release(xbox.getRawButton(Constants.LEFT_BUMPER));
-		shooterSubsystem.aim(xbox.getRawAxis(Constants.RIGHT_X));
+		//shooterSubsystem.aim(xbox.getRawAxis(Constants.RIGHT_X));
 		
 		//Printouts:
 		System.out.println("State of Shift Button: " + xbox.getRawButton(Constants.LEFT_BUMPER));

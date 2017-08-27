@@ -29,16 +29,16 @@ public class Scheme
 	
 	//Logitech Ports (Default)
 		//Digital
-			public static final int A = 1;
-			public static final int B = 2;
-			public static final int X = 3;
-			public static final int Y = 4;
-			public static final int LEFT_BUMPER = 5;
-			public static final int RIGHT_BUMPER = 6;
-			public static final int BACK = 7;
-			public static final int START = 8;
-			public static final int LEFT_STICK_BUTTON = 9;
-			public static final int RIGHT_STICK_BUTTON = 10;
+			public static final int A = 0;
+			public static final int B = 1;
+			public static final int X = 2;
+			public static final int Y = 3;
+			public static final int LEFT_BUMPER = 4;
+			public static final int RIGHT_BUMPER = 5;
+			public static final int BACK = 6;
+			public static final int START = 7;
+			public static final int LEFT_STICK_BUTTON = 8;
+			public static final int RIGHT_STICK_BUTTON = 9;
 		//Analog
 			public static final int LEFT_X = 10;
 			public static final int LEFT_Y = 11;
@@ -190,11 +190,11 @@ public class Scheme
 							System.out.println("		Annotation found at function \"" + m.getName() + "\" in class " + c.getName());
 							if (s.desc().equals(""))
 							{
-								g.drawString(m.getName(), LABEL_BASE_X, LABEL_BASE_Y + (s.value() * LABEL_INCR));
+								g.drawString(m.getName(), LABEL_BASE_X, LABEL_BASE_Y + ((s.value()) * LABEL_INCR));
 							}
 							else
 							{
-								g.drawString(s.desc(), LABEL_BASE_X, LABEL_BASE_Y + (s.value() * LABEL_INCR));
+								g.drawString(s.desc(), LABEL_BASE_X, LABEL_BASE_Y + ((s.value()) * LABEL_INCR));
 							}
 						}
 					}
@@ -203,11 +203,11 @@ public class Scheme
 						System.out.println("		Annotation found at function \"" + m.getName() + "\" in class " + c.getName());
 						if (singleSchema.desc().equals(""))
 						{
-							g.drawString(m.getName(), LABEL_BASE_X, LABEL_BASE_Y + (singleSchema.value() * LABEL_INCR));
+							g.drawString(m.getName(), LABEL_BASE_X, LABEL_BASE_Y + ((singleSchema.value()) * LABEL_INCR));
 						}
 						else
 						{
-							g.drawString(singleSchema.desc(), LABEL_BASE_X, LABEL_BASE_Y + (singleSchema.value() * LABEL_INCR));
+							g.drawString(singleSchema.desc(), LABEL_BASE_X, LABEL_BASE_Y + ((singleSchema.value()) * LABEL_INCR));
 						}
 					}
 				}
@@ -224,5 +224,6 @@ public class Scheme
 	    {
 			e.printStackTrace();
 		}
+	    System.out.println("<=== End Generation ===>");
 	}
 }

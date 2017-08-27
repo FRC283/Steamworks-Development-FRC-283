@@ -1,5 +1,8 @@
 package org.usfirst.frc.team283.napalm;
 
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Spark;
+
 public class ShooterSubsystem 
 {
 	Hopper hopper;
@@ -15,7 +18,7 @@ public class ShooterSubsystem
 	ShooterSubsystem()
 	{
 		Hopper hopper = new Hopper();
-		Flywheel flywheel = new Flywheel();
+		Flywheel flywheel = new Flywheel(new Spark(999), new Encoder(999, 999), 360);
 		Turret turret = new Turret();
 		
 	}
