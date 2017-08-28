@@ -19,8 +19,7 @@ public class ShooterSubsystem
 	{
 		Hopper hopper = new Hopper();
 		Flywheel flywheel = new Flywheel(new Spark(999), new Encoder(999, 999), 360);
-		Turret turret = new Turret();
-		
+		TurretAxis turret = new TurretAxis(new Spark(998), new Encoder(999, 999), 200, 400).addLimits(min, max);.configureTargeting(k, e);
 	}
 	
 	public void feed(boolean buttonState) //Runs the hopper and feed motors towards the flywheel at a fixed rate
