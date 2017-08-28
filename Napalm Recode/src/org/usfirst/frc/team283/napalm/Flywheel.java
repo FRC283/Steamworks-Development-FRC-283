@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.PWMSpeedController;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
- * A class that controls a flywheel. Reusable and reconfigurable.
+ * A class that controls a flywheel. Reusable and reconfigurable. 
  * <br>
  * 		<b>USAGE GUIDE</b>
  * <p>
@@ -32,24 +32,18 @@ public class Flywheel
 {
 	//True Constants for Class Tuning
 	/** The frequency that numbers are changed by in hertz. */
-	private final int CHANGE_FREQUENCY = 8; 
-	
-	/** Alias */
-	private final boolean TARGETING = true;
-	
-	/** Alias */
-	private final boolean BRAKING = false;
+	private final int CHANGE_FREQUENCY = 8;
 	
 	
-	//Physical or Class Components
+	//Component Objects
 	/** Motor controller that controls the actual wheel. Can be any class that extends PWMSpeedController */
 	private PWMSpeedController controller;
 	
 	/** Reads the speed and position of the wheel. "tach" means tachometer */
 	private Encoder tach;
 	
-	/** Keeps track of braking intervals */
-	private Timer brakeTimer;
+	/** Keeps track of braking and accelerating intervals */
+	private Timer accelTimer;
 	
 	
 	//"Constants" - set only once at intialization
@@ -73,13 +67,16 @@ public class Flywheel
 	/** Value set to controller once per cycle. */
 	private double power = 0;
 	
-	/** Value added per robot cycle to flywheel power */
+	/** Value added per second to flywheel power <br>
+	 * also used for braking <br>
+	 * units: power/sec */
 	private double powerAccel = 0;
 	
 	/** The speed value we are attempting to approach. */
 	private double targetRPM = 0;
 	
-	/** Value added per robot cycle to flywheel speed target */
+	/** Value added per robot cycle to flywheel speed target <br>
+	 * units: rpm/second */
 	private double rpmAccel = 0;
 	
 	/** Whether or not we are currently trying to approach a target rpm. While this is true, p-control is active */
@@ -87,9 +84,6 @@ public class Flywheel
 	
 	/** True while the robot is currently braking. Setting this to false cancels braking */
 	private boolean isBraking = false;
-	
-	/** The step down, per second, of the motors */
-	private double brakePower = 0;
 	
 	/**
 	 * Creates a flywheel instance
@@ -102,7 +96,8 @@ public class Flywheel
 		this.controller = c;
 		this.tach = e;
 		this.totalTicks = ticks;
-		this.brakeTimer = new Timer();
+		this.accelTimer = new Timer();
+		this.tach.setDistancePerPulse(1);
 	}
 
 	/** 
@@ -113,24 +108,42 @@ public class Flywheel
 	public void periodic()
 	{
 		double prevPower = this.power;
-		if (this.accelTimer.get() >= 1/CHANGE_FREQUENCY)
+		if (this.accelTimer.get() >= 1/CHANGE_FREQUENCY) //After ever certain period of time
 		{
-			if (this.isTargeting == true && this.isBraking == false)
+			if (this.isTargeting == true && this.isBraking == false) //If we are targeting and not braking
 			{
-				this.targetRPM += this.rpmAccel/CHANGE_FREQUENCY; //Although it updates X times per second, it only changes by 1/X'th of the actual accel
+				this.targetRPM += this.rpmAccel/CHANGE_FREQUENCY; //Change the RPM by the accel
+				//Although it updates X times per second, it only changes by 1/X'th of the actual accel
+				
+				//P-Control
+				/////
+				double err = this.getUnfixedRPM() - this.targetRPM; //Discrepancy between target and current
+				if (Math.abs(err) < this.pDeadzone) //If our error is within acceptable range
+				{
+					//POWER IS MAINTAINED, NOT SET TO 0.
+					this.isTargeting = false; //Having reached rpm, we are done targeting
+					//We could still be accelerating - leave that how it is
+				}
+				else //If we're not there yet
+				{
+					this.power += err * this.pConstant; //Our change in power is great for a greater discrepency in rpm
+				}
+				//////
 			}
-			else
+			else //If we are not targeting OR we are braking
 			{
 				this.power += this.powerAccel/CHANGE_FREQUENCY; //Used for braking as well as regular accel
 			}
 		}
-		else if (this.isBraking == true && this.isTargeting == false)
+		else if (this.isBraking == true && this.isTargeting == false) //Then, if we are braking
 		{
 			if ((prevPower > 0 && power < 0) || (prevPower < 0 && power > 0) || (power == 0)) //If the accel changed reached 0
 			{
-				brakeTimer.stop();
+				//Stop everything! We braked!
+				accelTimer.stop();
 				this.isBraking = false;
 				this.isTargeting = false;
+				this.powerAccel = 0;
 				this.power = 0;
 			}
 		}
@@ -139,46 +152,7 @@ public class Flywheel
 		
 		controller.set(this.power * this.controllerPolarity);
 		
-		
-		
-		
-		if (this.isTargeting == true) //Performs p-control to approach given rpm
-		{
-			this.targetRPM += this.rpmAccel; //Add on speed accel
-			double err = this.getUnfixedRPM() - this.targetRPM; //Discrepancy between target and current
-			if (Math.abs(err) < this.pDeadzone) //If our error is within acceptable range
-			{
-				//POWER IS MAINTAINED, NOT SET TO 0.
-				this.isTargeting = false; //Having reached rpm, we are done targeting
-				//We could still be accelerating - leave that how it is
-			}
-			else //If we're not there yet
-			{
-				this.power += err * this.pConstant; //Our change in power is great for a greater discrepency in rpm
-			}
 		}
-		else //If we are not targeting
-		{
-			this.power += this.powerAccel; //If we are not targeting a speed, add power accel
-		}
-		if (this.isBraking == true)
-		{
-			if (brakeTimer.get() >= 1/CHANGE_FREQUENCY) //If the right time period has passed (e.g. 1/4 of a second)
-			{
-				double prevPower = this.power; //Contains the power from last step
-				this.power += (this.brakePower/CHANGE_FREQUENCY) * ((this.power > 0) ? -1 : 1); //Make sure that this braking is decreasing the magnitude of the flywheel's angular velocity
-				if ((prevPower > 0 && power < 0) || (prevPower < 0 && power > 0) || (power == 0)) //If braking reached 0
-				{
-					brakeTimer.stop();
-					this.isBraking = false;
-					this.power = 0;
-				}
-				brakeTimer.reset();
-				brakeTimer.start();
-			}
-		}
-		this.controller.set(this.power * this.controllerPolarity);
-	}
 	
 	/**
 	 * Calling this function allows you to set values for two variables used in targeting (p-Control)
@@ -205,9 +179,9 @@ public class Flywheel
 	}
 	
 	/**
-	 * The power to the flywheel changes by the given amount per cycle <br>
+	 * The power to the flywheel changes by the given amount per second <br>
 	 * Calling this function stops any speed targeting <br>
-	 * @param delta - change in power per cycle
+	 * @param delta - change in power per sec
 	 */
 	public void setPowerAccel(double accel)
 	{
@@ -231,7 +205,7 @@ public class Flywheel
 	
 	/**
 	 * Each robot cycle, the robot will add the given amount onto the <b>target</b> RPM <br>
-	 * @param rpmChange - RPM added per cycle
+	 * @param rpmChange - RPM added per sec
 	 */
 	public void setTargetRPMAccel(double rpmChange)
 	{
@@ -304,12 +278,12 @@ public class Flywheel
 	 */
 	public void brake(double brakeTime)
 	{
-		this.brakePower = controller.get() / brakeTime; //Power step-down per second
+		this.powerAccel = -1 * controller.get() / brakeTime; //Power step-down per second
 		this.targetRPM = 0;
 		this.rpmAccel = 0;
 		this.isBraking = true;
 		this.isTargeting = false;
-		brakeTimer.reset();
-		brakeTimer.start();
+		accelTimer.reset();
+		accelTimer.start();
 	}
 }
