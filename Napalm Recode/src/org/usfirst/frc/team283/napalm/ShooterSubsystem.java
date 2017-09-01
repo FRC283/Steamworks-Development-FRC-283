@@ -4,12 +4,13 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Spark;
 import org.usfirst.frc.team283.napalm.Constants;
+import org.usfirst.frc.team283.napalm.Scheme.Schema;
 
 public class ShooterSubsystem 
 {
 	Hopper hopper;
 	Flywheel flywheel;
-	Turret turret;
+	TurretAxis turret;
 	
 	//Constants
 	/** The speed at which the hopper and feed motors run */
@@ -20,15 +21,15 @@ public class ShooterSubsystem
 	ShooterSubsystem()
 	{
 		Hopper hopper = new Hopper();
-		Flywheel flywheel = new Flywheel(new Spark(999), new Encoder(999, 999), 360);
-		TurretAxis turret = new TurretAxis(new Spark(998), new Encoder(999, 999), 200, 400);
-		turret.addLimits(new DigitalInput(CCW_LIMIT_SWITCH_PORT), new DigitalInput(CW_LIMIT_SWITCH_PORT));
-		turret.configureTargeting(1/1000, 50);
+		//Flywheel flywheel = new Flywheel(new Spark(999), new Encoder(999, 999), 360);
+		TurretAxis turret = new TurretAxis(new Spark(Constants.TURRET_CONTROLLER_PORT));
+		turret.addLimits(new DigitalInput(Constants.CCW_LIMIT_SWITCH_PORT), new DigitalInput(Constants.CW_LIMIT_SWITCH_PORT));
+		//turret.configureTargeting(1/1000, 50);
 	}
 	
 	public void periodic()
 	{
-		flywheel.periodic();
+		//flywheel.periodic();
 		turret.periodic();
 	}
 	
@@ -40,5 +41,11 @@ public class ShooterSubsystem
 	public void speed(float stickPosition) //Cumulatively adjusts flywheel speed based on input
 	{
 		
+	}
+	
+	@Schema(Scheme.XBOX_LEFT_X)
+	public void manualAim(double axisInput)
+	{
+		turret.setPower(axisInput);
 	}
 }

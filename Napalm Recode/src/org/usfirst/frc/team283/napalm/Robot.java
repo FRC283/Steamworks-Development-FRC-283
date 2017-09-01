@@ -12,6 +12,8 @@ public class Robot extends IterativeRobot //Post-Release merge comment
 	Joystick xbox;
 	Joystick logitech;
 	
+	//SCOOBYDOOBY sd; //ZIP-ZAP ZAHBAHBAH DOO-DEH DOO-DEE YEAAAAHHHHHH
+	
 	@Override
 	public void robotInit() 
 	{
@@ -41,7 +43,6 @@ public class Robot extends IterativeRobot //Post-Release merge comment
 		
 	}
 	
-	
 	@Override
 	public void teleopPeriodic() 
 	{
@@ -51,7 +52,11 @@ public class Robot extends IterativeRobot //Post-Release merge comment
 		gearSubsystem.pouch(xbox.getRawButton(Constants.RIGHT_BUMPER));
 		//UNKNOWN IF LOCKOUT IS CORRECT
 		gearSubsystem.release(xbox.getRawButton(Constants.LEFT_BUMPER));
-		//shooterSubsystem.aim(xbox.getRawAxis(Constants.RIGHT_X));
+		System.out.println(xbox.getRawAxis(Constants.LEFT_X));
+		//shooterSubsystem.manualAim(xbox.getRawAxis(Constants.LEFT_X));
+		
+		//Periodics
+		shooterSubsystem.periodic();
 		
 		//Printouts:
 		System.out.println("State of Shift Button: " + xbox.getRawButton(Constants.LEFT_BUMPER));

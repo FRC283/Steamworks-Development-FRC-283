@@ -4,15 +4,17 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PWMSpeedController;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 
 /**
- * A class for controlling a turret in one axis using an encoder (not potentiometer) <br>
+ * A class for controlling a turret in one axis <br>
+ * Could use an encoder, a potentiometer, or no feedback
  * 		<b>USAGE GUIDE</b> <br>
  * <p>
  * 		Setting a speed cancels the current position <br>
  * 		Setting a position cancels the current speed <br>
  * </p>
- * TODO: Allow power control? Timeout for p-control
+ * TODO: Allow power control? Timeout for p-control? Generalize feedback sensors
  * @author Benjamin
  */
 public class TurretAxis
@@ -21,12 +23,16 @@ public class TurretAxis
 	/**  Number of times per second the target position is updated via the speed. hertz. */
 	private final int CHANGE_FREQUENCY = 8;
 	
+	
 	//Component Objects
 	/** Controls motion of axis */
 	private PWMSpeedController controller;
 	
 	/** Provides feedback on axis */
 	private Encoder encoder;
+	
+	/** Provides feedback on axis */
+	private Potentiometer pot;
 	
 	/** Limit switch at smallest end of axis */
 	private DigitalInput minLimit;
@@ -41,6 +47,9 @@ public class TurretAxis
 	//Variables
 	/** True while calibrating. No other actions can take place while calibrating. */
 	private boolean isCalibrating = false;
+	
+	/** When true, overrides all other settings to control by power */
+	private boolean isPowerControlling = false;
 	
 	/** Last set target tick */
 	private int target;
@@ -59,6 +68,9 @@ public class TurretAxis
 	
 	
 	//"Constants" - set only once at initialization
+	/** If true, this system has a feedback sensor */
+	private boolean hasFeedback;
+	
 	/** Maximum safe encoder position above the lower limit switch */
 	private int maxPosition;
 	
@@ -84,17 +96,45 @@ public class TurretAxis
 	private double calibrationPower;
 	
 	/**
-	 * 
-	 * @param c
-	 * @param e
-	 * @param min
-	 * @param max
+	 * Use this constructor if you have a continuous encoder on your axis
+	 * @param c - main motor controller
+	 * @param e - main feedback encoder
+	 * @param min - minimum SAFE encoder position
+	 * @param max - maximum SAFE encoder position
 	 */
 	public TurretAxis(PWMSpeedController c, Encoder e, int min, int max)
 	{
+		this.controller = c;
 		this.encoder = e;
+		this.hasFeedback = true;
 		this.encoder.setDistancePerPulse(1);
 		this.speedTimer = new Timer();
+	}
+	
+	/**
+	 * Use this constructor if you have a continuous potentiometer on your axis
+	 * @param c - main motor controller
+	 * @param p - main feedback pot
+	 * @param min - minimum SAFE encoder position
+	 * @param max - maximum SAFE encoder position
+	 */
+	public TurretAxis(PWMSpeedController c, Potentiometer p, int min, int max)
+	{
+		this.controller = c;
+		this.pot = p;
+		this.hasFeedback = true;
+		this.speedTimer = new Timer();
+	}
+
+	/**
+	 * Use this constructor if you have no continuous feedback on your axis
+	 * @param c - main motor controller
+	 */
+	public TurretAxis(PWMSpeedController c)
+	{
+		this.controller = c;
+		this.speedTimer = new Timer();
+		this.hasFeedback = false;
 	}
 	
 	/**
@@ -110,40 +150,62 @@ public class TurretAxis
 	
 	public void periodic()
 	{
-		if (this.isCalibrating == true)
+		if (this.hasFeedback == true)
 		{
-			if (this.minLimit.get() == true)
+			if (this.isCalibrating == true)
 			{
-				this.encoder.reset(); //Label the minimum as 0
-				this.power = this.calibrationPower; //Move towards max
+				if (this.minLimit.get() == true)
+				{
+					this.encoder.reset(); //Label the minimum as 0
+					this.power = this.calibrationPower; //Move towards max
+				}
+				if (this.maxLimit.get() == true)
+				{
+					this.power = 0;
+					this.switchRange = this.encoder.get(); 
+					System.out.println("TurretAxis: Calibrated! The max position is positive " + this.maxPosition);
+				}
 			}
-			if (this.maxLimit.get() == true)
+			else
+			{
+				if (this.isPowerControlling == false) //If we are not power controlling
+				{
+					if (this.speedTimer.get() >= 1/CHANGE_FREQUENCY) //If a certain period has passed
+					{
+						this.speedTimer.reset();
+						this.speedTimer.start();
+						
+						//Add onto the target the speed per sec modified by the frequency
+						this.target += this.speed/CHANGE_FREQUENCY; //If we are not changing target position, speed = 0
+					}
+					int err = this.encoder.get() - this.target; //Calculate error
+					if (Math.abs(err) <= this.pDeadzone) //If in allowable bounds
+					{
+						this.power = 0;
+						this.speed = 0;
+					}
+					else //If we still need to adjust
+					{
+						this.power = err * this.pConstant;
+					}
+				}
+				//If we ARE power controlling, we already set the power!
+			}
+			
+			//LIMITING CHECKS
+			int p = this.encoder.get(); //Current tick or position
+			if ((p > this.maxPosition && this.power > 0) ||
+			(p < this.minPosition && this.power < 0) ||
+			(this.minLimit.get() && this.power < 0) ||
+			(this.maxLimit.get() && this.power > 0))
 			{
 				this.power = 0;
-				this.switchRange = this.encoder.get(); 
-				System.out.println("Calibrated! The max position is positive " + this.maxPosition);
+				System.out.print("TurretAxis: You are out of bounds or you are on a limit!");
 			}
-		}
-		else
-		{
-			if (this.speedTimer.get() >= 1/CHANGE_FREQUENCY)
-			{
-				this.speedTimer.reset();
-				this.speedTimer.start();
-				
-				this.target += this.speed/CHANGE_FREQUENCY; //If we are not changing target position, speed = 0
-			}
-			int err = this.encoder.get() - this.target; //Calculate error
-			if (Math.abs(err) <= this.pDeadzone) //If in allowable bounds
-			{
-				this.power = 0;
-				this.speed = 0;
-			}
-			else //If we still need to adjust
-			{
-				this.power = err * this.pConstant;
-			}
-		}
+		} //End of requiring feedback
+		
+		//No feedback? Set power to whatever we got!
+		
 		this.controller.set(this.power * this.controllerPolarity);
 	}
 	
@@ -154,18 +216,27 @@ public class TurretAxis
 	 */
 	public void configureTargeting(double k, double e)
 	{
-		this.pConstant = k;
-		this.pDeadzone = e;
+		if (this.hasFeedback) 
+		{
+			this.pConstant = k;
+			this.pDeadzone = e;
+		}
+		else
+		{
+			System.out.println();
+		}
 	}
 	
 	/**
 	 * Adjusts target speed of yaw motor based on input of turret <br>
-	 * The target position literally changes by the specified amount per second
+	 * The target position literally changes by the specified amount per second <br>
+	 * Calling this can modify other control calls
 	 * @param ticksPerSec - Change in position per second
 	 */
 	public void setSpeed(double ticksPerSec)
 	{
 		this.speed = ticksPerSec;
+		this.isPowerControlling = false;
 	}
 	
 	/**
@@ -185,7 +256,8 @@ public class TurretAxis
 	}
 	
 	/**
-	 * Moves the turret until it reads the specified tick on the feedback sensor
+	 * Moves the turret until it reads the specified tick on the feedback sensor <br>
+	 * Calling this cancels any other controls
 	 * @param position - target tick
 	 */
 	public void setPosition(int position)
@@ -193,6 +265,7 @@ public class TurretAxis
 		//Can change target even when it is not finished with current target
 		this.target = position;
 		this.speed = 0;
+		this.isPowerControlling = false;
 	}
 	
 	/**
@@ -212,6 +285,17 @@ public class TurretAxis
 	}
 	
 	/**
+	 * Controls the motor via the power <br>
+	 * Calling this cancels any other controls
+	 * @param p - take a guess
+	 * */
+	public void setPower(double p)
+	{
+		this.power = p;
+		this.isPowerControlling = true;
+	}
+	
+	/**
 	 * Calling this function sets a position for the axis to consider home after calibration
 	 * @param homeTick - the position for home
 	 */
@@ -224,7 +308,7 @@ public class TurretAxis
 		}
 		else
 		{
-			System.out.println("You have already set a home!");
+			System.out.println("TurretAxis: You have already set a home!");
 		}
 	}
 	
@@ -247,7 +331,7 @@ public class TurretAxis
 		}
 		else
 		{
-			System.out.println("Please call \"setHome(#)\" before homing.");	
+			System.out.println("TurretAxis: Please call \"setHome(#)\" before homing.");	
 		}	
 	}
 	
@@ -278,7 +362,7 @@ public class TurretAxis
 		this.calibrationPower = cPower;
 		if (this.maxLimit == null || this.minLimit == null)
 		{
-			System.out.println("Please add limit switches before attempting to calibrate.");
+			System.out.println("TurretAxis: Please add limit switches before attempting to calibrate.");
 		}
 		else
 		{
