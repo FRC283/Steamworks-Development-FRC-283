@@ -150,6 +150,7 @@ public class TurretAxis
 	
 	public void periodic()
 	{
+		
 		if (this.hasFeedback == true)
 		{
 			if (this.isCalibrating == true)
@@ -190,19 +191,35 @@ public class TurretAxis
 					}
 				}
 				//If we ARE power controlling, we already set the power!
+			} //End of not calibrating
+			
+			if ((this.maxLimit != null) && (this.minLimit != null))
+			{
+				//LIMITING CHECKS
+				int p = this.encoder.get(); //Current tick or position
+				if ((p > this.maxPosition && this.power > 0) ||
+				(p < this.minPosition && this.power < 0) ||
+				(this.minLimit.get() && this.power < 0) ||
+				(this.maxLimit.get() && this.power > 0))
+				{
+					this.power = 0;
+					System.out.print("TurretAxis: You are out of bounds or you are on a limit!");
+				}
 			}
 			
+		} //End of requiring feedback
+		
+		
+		if ((this.maxLimit != null) && (this.minLimit != null))
+		{
 			//LIMITING CHECKS
-			int p = this.encoder.get(); //Current tick or position
-			if ((p > this.maxPosition && this.power > 0) ||
-			(p < this.minPosition && this.power < 0) ||
-			(this.minLimit.get() && this.power < 0) ||
+			if ((this.minLimit.get() && this.power < 0) ||
 			(this.maxLimit.get() && this.power > 0))
 			{
 				this.power = 0;
-				System.out.print("TurretAxis: You are out of bounds or you are on a limit!");
+				System.out.print("TurretAxis: You are on a limit!");
 			}
-		} //End of requiring feedback
+		}
 		
 		//No feedback? Set power to whatever we got!
 		

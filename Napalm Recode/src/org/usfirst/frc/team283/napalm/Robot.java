@@ -53,7 +53,7 @@ public class Robot extends IterativeRobot //Post-Release merge comment
 		//UNKNOWN IF LOCKOUT IS CORRECT
 		gearSubsystem.release(xbox.getRawButton(Constants.LEFT_BUMPER));
 		System.out.println(xbox.getRawAxis(Constants.LEFT_X));
-		//shooterSubsystem.manualAim(xbox.getRawAxis(Constants.LEFT_X));
+		shooterSubsystem.manualAim(xbox.getRawAxis(Constants.RIGHT_X));
 		
 		//Periodics
 		shooterSubsystem.periodic();

@@ -1,36 +1,52 @@
 package org.usfirst.frc.team283.napalm;
 
+import edu.wpi.first.wpilibj.CANSpeedController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Spark;
 import org.usfirst.frc.team283.napalm.Constants;
 import org.usfirst.frc.team283.napalm.Scheme.Schema;
+import com.ctre.CANTalon.TalonControlMode;
+
+import com.ctre.CANTalon;
 
 public class ShooterSubsystem 
 {
 	Hopper hopper;
-	Flywheel flywheel;
 	TurretAxis turret;
+	CANTalon flywheelController;
 	
 	//Constants
 	/** The speed at which the hopper and feed motors run */
 	private final float FEED_SPEED = 1; 
 	
-
+	/** The number of encoder ticks per revolution in the flywheel */
+	private final int FLYWHEEL_TICKS = 360; //Ripped from old c++, but that code notes that it's incorrect. Some confusion here.
+	
+	/** P-Control coefficient for flywheel */
+	private final double FLYWHEEL_P_CONSTANT = 0.5; //Value of 0.5 from old code.
+	
 	
 	ShooterSubsystem()
 	{
-		Hopper hopper = new Hopper();
-		//Flywheel flywheel = new Flywheel(new Spark(999), new Encoder(999, 999), 360);
-		TurretAxis turret = new TurretAxis(new Spark(Constants.TURRET_CONTROLLER_PORT));
+		this.hopper = new Hopper();
+		this.turret = new TurretAxis(new Spark(Constants.TURRET_CONTROLLER_PORT));
 		turret.addLimits(new DigitalInput(Constants.CCW_LIMIT_SWITCH_PORT), new DigitalInput(Constants.CW_LIMIT_SWITCH_PORT));
-		//turret.configureTargeting(1/1000, 50);
+		
+		flywheelController = new CANTalon(Constants.FLYWHEEL_CONTROLLER_PORT_A);
+		flywheelController.setControlMode(TalonControlMode.Speed.getValue());
+		flywheelController.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+		flywheelController.configEncoderCodesPerRev(FLYWHEEL_TICKS);
+		flywheelController.setP(FLYWHEEL_P_CONSTANT);
+		flywheelController.setI(0);
+		flywheelController.setD(0);
+		flywheelController.setF(0);
 	}
 	
 	public void periodic()
 	{
-		//flywheel.periodic();
 		turret.periodic();
+		System.out.println("ShooterSS: Flywheel RPM: " + flywheelController.getSpeed());
 	}
 	
 	public void feed(boolean buttonState) //Runs the hopper and feed motors towards the flywheel at a fixed rate
