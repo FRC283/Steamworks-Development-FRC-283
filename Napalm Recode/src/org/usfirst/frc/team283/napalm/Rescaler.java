@@ -7,7 +7,16 @@ package org.usfirst.frc.team283.napalm;
  */
 public class Rescaler
 {
-	
+	/**
+	 * Shortcut for using the rescaler with a deadzone
+	 * @param value - value to be rescaled
+	 * @param deadzone - abs of deadzone e.g. 0.1
+	 * @return - new value
+	 */
+	public static double deadzone(double value, double deadzone)
+	{
+		return rescale(deadzone, 1, 0, 1, value);
+	}
 	public static double rescale(double lowero, double uppero, double lowern, double uppern, double value)
 	{
 		boolean neg = false;

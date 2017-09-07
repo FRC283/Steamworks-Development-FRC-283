@@ -8,14 +8,14 @@ import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 
 /**
  * A class for controlling a turret in one axis <br>
- * Could use an encoder, a potentiometer, or no feedback
+ * Could use an encoder, a potentiometer, or no feedback <br>
  * 		<b>USAGE GUIDE</b> <br>
  * <p>
  * 		Setting a speed cancels the current position <br>
  * 		Setting a position cancels the current speed <br>
  * </p>
- * TODO: Allow power control? Timeout for p-control? Generalize feedback sensors
- * @author Benjamin
+ * TODO: Timeout for p-control? Generalize feedback sensors? Reversable limit switches?
+ * @author Benjamin Ranson
  */
 public class TurretAxis
 {
@@ -95,6 +95,10 @@ public class TurretAxis
 	/** Power set during calibration */
 	private double calibrationPower;
 	
+	/** When this is true, limit switches return reverse values */
+	private boolean normallyClosed = true;
+	
+	
 	/**
 	 * Use this constructor if you have a continuous encoder on your axis
 	 * @param c - main motor controller
@@ -138,14 +142,17 @@ public class TurretAxis
 	}
 	
 	/**
-	 * This function needs to be called on your turretAxis if your actual turret has limit switches on your axis
+	 * This function needs to be called on your turretAxis if your actual turret has limit switches on your axis <br>
+	 * nc 'normally closed' allows you to reverse all values from the limits
 	 * @param min
 	 * @param max
+	 * @param nc - set true to have limits return false when unpressed
 	 */
-	public void addLimits(DigitalInput min, DigitalInput max)
+	public void addLimits(DigitalInput min, DigitalInput max, boolean nc)
 	{
 		this.minLimit = min;
 		this.maxLimit = max;
+		this.normallyClosed = nc;
 	}
 	
 	public void periodic()
@@ -155,12 +162,12 @@ public class TurretAxis
 		{
 			if (this.isCalibrating == true)
 			{
-				if (this.minLimit.get() == true)
+				if (this.normallyClosed ^ this.minLimit.get())
 				{
 					this.encoder.reset(); //Label the minimum as 0
 					this.power = this.calibrationPower; //Move towards max
 				}
-				if (this.maxLimit.get() == true)
+				if (this.normallyClosed ^ this.maxLimit.get())
 				{
 					this.power = 0;
 					this.switchRange = this.encoder.get(); 
@@ -199,11 +206,11 @@ public class TurretAxis
 				int p = this.encoder.get(); //Current tick or position
 				if ((p > this.maxPosition && this.power > 0) ||
 				(p < this.minPosition && this.power < 0) ||
-				(this.minLimit.get() && this.power < 0) ||
-				(this.maxLimit.get() && this.power > 0))
+				((this.normallyClosed ^ this.minLimit.get()) && this.power < 0) ||
+				(( this.normallyClosed ^ this.maxLimit.get()) && this.power > 0))
 				{
 					this.power = 0;
-					System.out.print("TurretAxis: You are out of bounds or you are on a limit!");
+					System.out.println("TurretAxis: You are out of bounds or you are on a limit!");
 				}
 			}
 			
@@ -213,11 +220,12 @@ public class TurretAxis
 		if ((this.maxLimit != null) && (this.minLimit != null))
 		{
 			//LIMITING CHECKS
-			if ((this.minLimit.get() && this.power < 0) ||
-			(this.maxLimit.get() && this.power > 0))
+			if (((this.normallyClosed ^ this.minLimit.get()) && this.power < 0) ||
+			((this.normallyClosed ^ this.maxLimit.get()) && this.power > 0))
 			{
 				this.power = 0;
-				System.out.print("TurretAxis: You are on a limit!");
+				System.out.println("TurretAxis: You are on a limit!");
+				System.out.println("TurretAxis: MinLimit: " + (this.normallyClosed ^ this.minLimit.get()) + " MaxLimit: " + (this.normallyClosed ^ this.maxLimit.get()));
 			}
 		}
 		

@@ -16,6 +16,7 @@ public class ShooterSubsystem
 	TurretAxis turret;
 	CANTalon flywheelController;
 	
+	
 	//Constants
 	/** The speed at which the hopper and feed motors run */
 	private final float FEED_SPEED = 1; 
@@ -26,12 +27,16 @@ public class ShooterSubsystem
 	/** P-Control coefficient for flywheel */
 	private final double FLYWHEEL_P_CONSTANT = 0.5; //Value of 0.5 from old code.
 	
+	/** Aiming Deadzone for flywheel and axis */
+	private final double DEADZONE = 0.1;
+	
 	
 	ShooterSubsystem()
 	{
 		this.hopper = new Hopper();
 		this.turret = new TurretAxis(new Spark(Constants.TURRET_CONTROLLER_PORT));
-		turret.addLimits(new DigitalInput(Constants.CCW_LIMIT_SWITCH_PORT), new DigitalInput(Constants.CW_LIMIT_SWITCH_PORT));
+		turret.addLimits(new DigitalInput(Constants.CCW_LIMIT_SWITCH_PORT), new DigitalInput(Constants.CW_LIMIT_SWITCH_PORT), true);
+		turret.reverseController();
 		
 		flywheelController = new CANTalon(Constants.FLYWHEEL_CONTROLLER_PORT_A);
 		flywheelController.setControlMode(TalonControlMode.Speed.getValue());
@@ -62,6 +67,6 @@ public class ShooterSubsystem
 	@Schema(Scheme.XBOX_LEFT_X)
 	public void manualAim(double axisInput)
 	{
-		turret.setPower(axisInput);
+		turret.setPower(Rescaler.deadzone(axisInput, DEADZONE));
 	}
 }

@@ -3,7 +3,7 @@ package org.usfirst.frc.team283.napalm;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 
-public class Robot extends IterativeRobot //Post-Release merge comment
+public class Robot extends IterativeRobot 
 {
 	DriveSubsystem drivetrain;
 	GearSubsystem gearSubsystem;
