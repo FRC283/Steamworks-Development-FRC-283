@@ -48,5 +48,5 @@ public abstract class Constants
 			public static final int RIGHT_DRIVE_ENCODER_PORT_B = 8;
 		//"Device ID"
 			public static final int FLYWHEEL_CONTROLLER_PORT_A = 0; //Ripped from old C++ code
-			public static final int FLYWHEEL_CONTROLLER_PORT_B = 1; //Ripped from old C++ code
+			//public static final int FLYWHEEL_CONTROLLER_PORT_B = 1; //Ripped from old C++ code
 }

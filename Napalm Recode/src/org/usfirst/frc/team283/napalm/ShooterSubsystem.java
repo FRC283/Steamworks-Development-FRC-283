@@ -24,8 +24,11 @@ public class ShooterSubsystem
 	/** The number of encoder ticks per revolution in the flywheel */
 	private final int FLYWHEEL_TICKS = 360; //Ripped from old c++, but that code notes that it's incorrect. Some confusion here.
 	
+	/** Maximum regular flywheel RPM */
+	private final double MAX_FLYWHEEL_RPM = 4000;
+	
 	/** P-Control coefficient for flywheel */
-	private final double FLYWHEEL_P_CONSTANT = 0.5; //Value of 0.5 from old code.
+	private final double FLYWHEEL_P_CONSTANT = 1/(MAX_FLYWHEEL_RPM); //Value of 0.5 from old code.
 	
 	/** Aiming Deadzone for flywheel and axis */
 	private final double DEADZONE = 0.1;
@@ -41,6 +44,7 @@ public class ShooterSubsystem
 		flywheelController = new CANTalon(Constants.FLYWHEEL_CONTROLLER_PORT_A);
 		flywheelController.setControlMode(TalonControlMode.Speed.getValue());
 		flywheelController.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+		//flywheelController.getSpeed();
 		flywheelController.configEncoderCodesPerRev(FLYWHEEL_TICKS);
 		flywheelController.setP(FLYWHEEL_P_CONSTANT);
 		flywheelController.setI(0);
@@ -61,7 +65,7 @@ public class ShooterSubsystem
 	
 	public void speed(float stickPosition) //Cumulatively adjusts flywheel speed based on input
 	{
-		
+		flywheelController.set(stickPosition * MAX_FLYWHEEL_RPM);
 	}
 	
 	@Schema(Scheme.XBOX_LEFT_X)
