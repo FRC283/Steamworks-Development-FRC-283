@@ -110,6 +110,9 @@ public class Flywheel
 		double prevPower = this.power;
 		if (this.accelTimer.get() >= 1/CHANGE_FREQUENCY) //After ever certain period of time
 		{
+			this.accelTimer.reset();
+			this.accelTimer.start();
+			
 			if (this.isTargeting == true && this.isBraking == false) //If we are targeting and not braking
 			{
 				this.targetRPM += this.rpmAccel/CHANGE_FREQUENCY; //Change the RPM by the accel
@@ -147,9 +150,6 @@ public class Flywheel
 				this.power = 0;
 			}
 		}
-		this.accelTimer.reset();
-		this.accelTimer.start();
-		
 		controller.set(this.power * this.controllerPolarity);
 		
 		}
