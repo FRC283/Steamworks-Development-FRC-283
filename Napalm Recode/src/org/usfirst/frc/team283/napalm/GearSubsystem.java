@@ -51,7 +51,6 @@ public class GearSubsystem
 	 */
 	public void release(boolean rButtonState)
 	{
-		System.out.println("Push Sequence: " + pushSequence);
 		if (rButtonStateBuffer == false && rButtonState == true && pouchSol.get() == false) //Press Event
 		{
 			if (pouchSol.get() == false) //If the pouch is closed (which it should be)

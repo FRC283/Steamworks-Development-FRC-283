@@ -26,21 +26,9 @@ public class Robot extends IterativeRobot
 	}
 
 	@Override
-	public void autonomousInit() 
-	{
-		
-	}
-
-	@Override
 	public void autonomousPeriodic() 
 	{
-		
-	}
-
-	@Override
-	public void teleopInit() 
-	{
-		
+		//Your Auto Code Here
 	}
 	
 	@Override
@@ -52,14 +40,13 @@ public class Robot extends IterativeRobot
 		gearSubsystem.pouch(xbox.getRawButton(Constants.RIGHT_BUMPER));
 		//UNKNOWN IF LOCKOUT IS CORRECT
 		gearSubsystem.release(xbox.getRawButton(Constants.LEFT_BUMPER));
-		System.out.println(xbox.getRawAxis(Constants.LEFT_X));
 		shooterSubsystem.manualAim(xbox.getRawAxis(Constants.RIGHT_X));
+		shooterSubsystem.speed(xbox.getRawAxis(Constants.RIGHT_Y));
 		
 		//Periodics
 		shooterSubsystem.periodic();
 		
 		//Printouts:
-		System.out.println("State of Shift Button: " + xbox.getRawButton(Constants.LEFT_BUMPER));
 		System.out.println("====================");
 	}
 }

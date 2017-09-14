@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.CANSpeedController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.usfirst.frc.team283.napalm.Constants;
 import org.usfirst.frc.team283.napalm.Scheme.Schema;
 import com.ctre.CANTalon.TalonControlMode;
@@ -15,7 +17,7 @@ public class ShooterSubsystem
 	Hopper hopper;
 	TurretAxis turret;
 	CANTalon flywheelController;
-	
+	CANTalon flywheelFollower; //Provides extra power to the flywheel. Mirrors the main controller
 	
 	//Constants
 	/** The speed at which the hopper and feed motors run */
@@ -33,6 +35,12 @@ public class ShooterSubsystem
 	/** Aiming Deadzone for flywheel and axis */
 	private final double DEADZONE = 0.1;
 	
+	/** Take a guess. The expected max rpm cap */
+	private final double MAX_RPM = 5000;
+	
+	/** F-Gain scaling based on maximum rpm */
+	private final double FLYWHEEL_F_CONSTANT = 0;
+	
 	
 	ShooterSubsystem()
 	{
@@ -42,20 +50,32 @@ public class ShooterSubsystem
 		turret.reverseController();
 		
 		flywheelController = new CANTalon(Constants.FLYWHEEL_CONTROLLER_PORT_A);
+		flywheelFollower = new CANTalon(Constants.FLYWHEEL_CONTROLLER_PORT_B);
 		flywheelController.setControlMode(TalonControlMode.Speed.getValue());
+		//flywheelController.setControlMode(TalonControlMode.PercentVbus.getValue());
+		//flywheelController.configNominalOutputVoltage(+0.0f, -0.0f);
+        //flywheelController.configPeakOutputVoltage(+12.0f, -12.0f);
+		
+		flywheelFollower.setControlMode(TalonControlMode.Follower.getValue());
 		flywheelController.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
-		//flywheelController.getSpeed();
 		flywheelController.configEncoderCodesPerRev(FLYWHEEL_TICKS);
 		flywheelController.setP(FLYWHEEL_P_CONSTANT);
 		flywheelController.setI(0);
 		flywheelController.setD(0);
-		flywheelController.setF(0);
+		flywheelController.setF(0.1);
+		flywheelController.configNominalOutputVoltage(0, 0);
+		flywheelController.configPeakOutputVoltage(12, -12);
 	}
 	
 	public void periodic()
 	{
-		turret.periodic();
-		System.out.println("ShooterSS: Flywheel RPM: " + flywheelController.getSpeed());
+		SmartDashboard.putNumber("Last Set Flywheel %Power", flywheelController.get());
+		SmartDashboard.putNumber("Last Set Follower Flywheel %Power", flywheelFollower.get());
+		SmartDashboard.putNumber("Encoder Value", flywheelController.getEncPosition());
+		SmartDashboard.putNumber("Loop Error", flywheelController.getClosedLoopError());
+		SmartDashboard.putNumber("Flywheel Regular Error", flywheelController.getError());
+		System.out.println("Encoder Value of Flywheel: " + flywheelController.getEncPosition());
+		System.out.println("Flywheel GetPosition Value: " + flywheelController.getPosition());
 	}
 	
 	public void feed(boolean buttonState) //Runs the hopper and feed motors towards the flywheel at a fixed rate
@@ -63,12 +83,14 @@ public class ShooterSubsystem
 		
 	}
 	
-	public void speed(float stickPosition) //Cumulatively adjusts flywheel speed based on input
+	@Schema(value = Scheme.XBOX_RIGHT_Y, desc = "adjust flywheel speed")
+	public void speed(double d) //Cumulatively adjusts flywheel speed based on input
 	{
-		flywheelController.set(stickPosition * MAX_FLYWHEEL_RPM);
+		flywheelController.set(Rescaler.deadzone(d, DEADZONE) * MAX_RPM);
+		flywheelFollower.set(Constants.FLYWHEEL_CONTROLLER_PORT_A); //Logic ripped from old code.
 	}
 	
-	@Schema(Scheme.XBOX_LEFT_X)
+	@Schema(value = Scheme.XBOX_RIGHT_X, desc = "control swivel motion of turret")
 	public void manualAim(double axisInput)
 	{
 		turret.setPower(Rescaler.deadzone(axisInput, DEADZONE));
