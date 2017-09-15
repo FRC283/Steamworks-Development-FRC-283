@@ -71,7 +71,7 @@ public class ShooterSubsystem
 	{
 		SmartDashboard.putNumber("Last Set Flywheel %Power", flywheelController.get());
 		SmartDashboard.putNumber("Last Set Follower Flywheel %Power", flywheelFollower.get());
-		SmartDashboard.putNumber("Encoder Value", flywheelController.getEncPosition());
+		SmartDashboard.putNumber("Encoder Value", flywheelFollower.getEncPosition());
 		SmartDashboard.putNumber("Loop Error", flywheelController.getClosedLoopError());
 		SmartDashboard.putNumber("Flywheel Regular Error", flywheelController.getError());
 		System.out.println("Encoder Value of Flywheel: " + flywheelController.getEncPosition());
