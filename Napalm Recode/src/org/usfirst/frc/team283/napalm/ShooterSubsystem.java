@@ -38,8 +38,11 @@ public class ShooterSubsystem
 	/** Take a guess. The expected max rpm cap */
 	private final double MAX_RPM = 5000;
 	
-	/** F-Gain scaling based on maximum rpm */
-	private final double FLYWHEEL_F_CONSTANT = 0;
+	/** Max rpm in native units per 100 ms */
+	private final double NATIVE_MAX_RPM = 120; 
+	
+	/** F-Gain scaling based on maximum rpm. Max "power" is 1023. */
+	private final double FLYWHEEL_F_CONSTANT = 1023/NATIVE_MAX_RPM;
 	
 	
 	ShooterSubsystem()
@@ -62,7 +65,7 @@ public class ShooterSubsystem
 		flywheelController.setP(FLYWHEEL_P_CONSTANT);
 		flywheelController.setI(0);
 		flywheelController.setD(0);
-		flywheelController.setF(0.1);
+		flywheelController.setF(FLYWHEEL_F_CONSTANT);
 		flywheelController.configNominalOutputVoltage(0, 0);
 		flywheelController.configPeakOutputVoltage(12, -12);
 	}
@@ -93,6 +96,15 @@ public class ShooterSubsystem
 	@Schema(value = Scheme.XBOX_RIGHT_X, desc = "control swivel motion of turret")
 	public void manualAim(double axisInput)
 	{
+		SmartDashboard.putNumber("Swivel Value", axisInput);
 		turret.setPower(Rescaler.deadzone(axisInput, DEADZONE));
+	}
+	
+	@Schema(value = Scheme.XBOX_LEFT_Y, desc = "roll balls into flywheel")
+	@Schema(value = Scheme.XBOX_LEFT_X, desc = "roll balls second queue")
+	public void feedIn(double infeedMag, double intakeMag)
+	{
+		this.hopper.infeedPower(infeedMag);
+		this.hopper.hopperPower(-1 * intakeMag);
 	}
 }

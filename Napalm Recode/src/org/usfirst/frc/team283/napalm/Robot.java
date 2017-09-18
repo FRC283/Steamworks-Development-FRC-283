@@ -42,6 +42,7 @@ public class Robot extends IterativeRobot
 		gearSubsystem.release(xbox.getRawButton(Constants.LEFT_BUMPER));
 		shooterSubsystem.manualAim(xbox.getRawAxis(Constants.RIGHT_X));
 		shooterSubsystem.speed(xbox.getRawAxis(Constants.RIGHT_Y));
+		shooterSubsystem.feedIn(xbox.getRawAxis(Constants.LEFT_X), xbox.getRawAxis(Constants.LEFT_Y));
 		
 		//Periodics
 		shooterSubsystem.periodic();
