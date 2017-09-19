@@ -19,11 +19,19 @@ public class Hopper
 		this.hopperController = new Spark(Constants.HOPPER_CONTROLLER_PORT);
 	}
 	
+	/**
+	 * Deadzones the controller that controls belts at the middle of the robot
+	 * @param hopperMag - input value
+	 */
 	public void hopperPower( double hopperMag)
 	{//rescale
 		this.hopperController.set(Rescaler.deadzone(hopperMag, DEADZONE));
 	}
 	
+	/**
+	 * Deadzones the controller that controls the belts that feed balls into the flywheel
+	 * @param infeedMag - input value
+	 */
 	public void infeedPower(double infeedMag)
 	{//rescale
 		this.infeedController.set(Rescaler.deadzone(infeedMag, DEADZONE));

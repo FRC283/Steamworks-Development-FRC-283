@@ -8,6 +8,7 @@ public class Robot extends IterativeRobot
 	DriveSubsystem drivetrain;
 	GearSubsystem gearSubsystem;
 	ShooterSubsystem shooterSubsystem;
+	CommSubsystem commSubsystem;
 	
 	Joystick xbox;
 	Joystick logitech;
@@ -20,6 +21,7 @@ public class Robot extends IterativeRobot
 		drivetrain = new DriveSubsystem();
 		gearSubsystem = new GearSubsystem();
 		shooterSubsystem = new ShooterSubsystem();
+		commSubsystem = new CommSubsystem("vision");
 		
 		logitech = new Joystick(Constants.DRIVER_CONTROLLER_PORT);
 		xbox = new Joystick(Constants.OPERATOR_CONTROLLER_PORT);
@@ -44,8 +46,11 @@ public class Robot extends IterativeRobot
 		shooterSubsystem.speed(xbox.getRawAxis(Constants.RIGHT_Y));
 		shooterSubsystem.feedIn(xbox.getRawAxis(Constants.LEFT_X), xbox.getRawAxis(Constants.LEFT_Y));
 		
+		System.out.println("Cycles per second: " + commSubsystem.getCyclesPerSec());
+		
 		//Periodics
 		shooterSubsystem.periodic();
+		commSubsystem.periodic();
 		
 		//Printouts:
 		System.out.println("====================");

@@ -77,8 +77,6 @@ public class ShooterSubsystem
 		SmartDashboard.putNumber("Encoder Value", flywheelFollower.getEncPosition());
 		SmartDashboard.putNumber("Loop Error", flywheelController.getClosedLoopError());
 		SmartDashboard.putNumber("Flywheel Regular Error", flywheelController.getError());
-		System.out.println("Encoder Value of Flywheel: " + flywheelController.getEncPosition());
-		System.out.println("Flywheel GetPosition Value: " + flywheelController.getPosition());
 	}
 	
 	public void feed(boolean buttonState) //Runs the hopper and feed motors towards the flywheel at a fixed rate
