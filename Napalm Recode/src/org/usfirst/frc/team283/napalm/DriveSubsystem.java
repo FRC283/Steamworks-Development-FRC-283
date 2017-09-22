@@ -2,6 +2,7 @@
 package org.usfirst.frc.team283.napalm;
 import org.usfirst.frc.team283.napalm.Scheme.Schema;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Spark;
 
@@ -22,6 +23,8 @@ public class DriveSubsystem
 	Spark rightController;
 	Spark climbSpark;
 	Solenoid gearShift;
+	Encoder leftDrive;
+	Encoder rightDrive;
 	
 	public DriveSubsystem()
 	{
@@ -30,6 +33,8 @@ public class DriveSubsystem
 		climbSpark = new Spark(Constants.CLIMB_CONTROLLER_PORT);
 		
 		gearShift = new Solenoid(Constants.SPEED_SHIFT_SOLENOID_PORT);
+		
+		leftDrive = new Encoder();
 		
 	}
 	
@@ -70,5 +75,14 @@ public class DriveSubsystem
 	public void lift(double triggerMagnitude)
 	{
 		climbSpark.set(triggerMagnitude > TRIGGER_DEADZONE ? -1 * triggerMagnitude : 0); //Set to climb the value of the trigger (Reverse-wired motor)
+	}
+	
+	/**
+	 * uses p control to drive set distance
+	 * @param distance - distance to drive in inches
+	 */
+	public void driveDistanceInit(double distance)
+	{
+		
 	}
 }

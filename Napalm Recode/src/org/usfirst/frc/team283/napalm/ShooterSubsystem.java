@@ -51,7 +51,6 @@ public class ShooterSubsystem
 		this.turret = new TurretAxis(new Spark(Constants.TURRET_CONTROLLER_PORT));
 		turret.addLimits(new DigitalInput(Constants.CCW_LIMIT_SWITCH_PORT), new DigitalInput(Constants.CW_LIMIT_SWITCH_PORT), true);
 		turret.reverseController();
-		
 		flywheelController = new CANTalon(Constants.FLYWHEEL_CONTROLLER_PORT_A);
 		flywheelFollower = new CANTalon(Constants.FLYWHEEL_CONTROLLER_PORT_B);
 		flywheelController.setControlMode(TalonControlMode.Speed.getValue());
@@ -77,6 +76,7 @@ public class ShooterSubsystem
 		SmartDashboard.putNumber("Encoder Value", flywheelFollower.getEncPosition());
 		SmartDashboard.putNumber("Loop Error", flywheelController.getClosedLoopError());
 		SmartDashboard.putNumber("Flywheel Regular Error", flywheelController.getError());
+		turret.periodic();
 	}
 	
 	public void feed(boolean buttonState) //Runs the hopper and feed motors towards the flywheel at a fixed rate
