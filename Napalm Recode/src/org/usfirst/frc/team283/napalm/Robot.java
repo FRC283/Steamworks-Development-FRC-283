@@ -2,18 +2,18 @@ package org.usfirst.frc.team283.napalm;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-
-public class Robot extends IterativeRobot //Post-Release merge comment
+public class Robot extends IterativeRobot 
 {
 	DriveSubsystem drivetrain;
 	GearSubsystem gearSubsystem;
 	ShooterSubsystem shooterSubsystem;
+	CommSubsystem commSubsystem;
 	
 	Joystick xbox;
 	Joystick logitech;
+	
+	//SCOOBYDOOBY sd; //ZIP-ZAP ZAHBAHBAH DOO-DEH DOO-DEE YEAAAAHHHHHH
 	
 	@Override
 	public void robotInit() 
@@ -21,29 +21,17 @@ public class Robot extends IterativeRobot //Post-Release merge comment
 		drivetrain = new DriveSubsystem();
 		gearSubsystem = new GearSubsystem();
 		shooterSubsystem = new ShooterSubsystem();
+		commSubsystem = new CommSubsystem("vision");
 		
 		logitech = new Joystick(Constants.DRIVER_CONTROLLER_PORT);
 		xbox = new Joystick(Constants.OPERATOR_CONTROLLER_PORT);
 	}
 
 	@Override
-	public void autonomousInit() 
-	{
-		
-	}
-
-	@Override
 	public void autonomousPeriodic() 
 	{
-		
+		//Your Auto Code Here
 	}
-
-	@Override
-	public void teleopInit() 
-	{
-		
-	}
-	
 	
 	@Override
 	public void teleopPeriodic() 
@@ -54,10 +42,17 @@ public class Robot extends IterativeRobot //Post-Release merge comment
 		gearSubsystem.pouch(xbox.getRawButton(Constants.RIGHT_BUMPER));
 		//UNKNOWN IF LOCKOUT IS CORRECT
 		gearSubsystem.release(xbox.getRawButton(Constants.LEFT_BUMPER));
-		shooterSubsystem.aim(xbox.getRawAxis(Constants.RIGHT_X));
+		shooterSubsystem.manualAim(xbox.getRawAxis(Constants.RIGHT_X));
+		shooterSubsystem.speed(xbox.getRawAxis(Constants.RIGHT_Y));
+		shooterSubsystem.feedIn(xbox.getRawAxis(Constants.LEFT_X), xbox.getRawAxis(Constants.LEFT_Y));
+		
+		System.out.println("Cycles per second: " + commSubsystem.getCyclesPerSec());
+		
+		//Periodics
+		shooterSubsystem.periodic();
+		commSubsystem.periodic();
 		
 		//Printouts:
-		System.out.println("State of Shift Button: " + xbox.getRawButton(Constants.LEFT_BUMPER));
 		System.out.println("====================");
 	}
 }

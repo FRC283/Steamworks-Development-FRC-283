@@ -16,7 +16,8 @@ import javax.imageio.ImageIO;
 
 /**
  * The purpose of this class is to read annotations and generate a schema image based on those annotations
- * @author Benjamin
+ * @author Benjamin G. Ranson
+ * @version 1.1
  */
 public class Scheme
 {
@@ -28,16 +29,16 @@ public class Scheme
 	
 	//Logitech Ports (Default)
 		//Digital
-			public static final int A = 1;
-			public static final int B = 2;
-			public static final int X = 3;
-			public static final int Y = 4;
-			public static final int LEFT_BUMPER = 5;
-			public static final int RIGHT_BUMPER = 6;
-			public static final int BACK = 7;
-			public static final int START = 8;
-			public static final int LEFT_STICK_BUTTON = 9;
-			public static final int RIGHT_STICK_BUTTON = 10;
+			public static final int A = 0;
+			public static final int B = 1;
+			public static final int X = 2;
+			public static final int Y = 3;
+			public static final int LEFT_BUMPER = 4;
+			public static final int RIGHT_BUMPER = 5;
+			public static final int BACK = 6;
+			public static final int START = 7;
+			public static final int LEFT_STICK_BUTTON = 8;
+			public static final int RIGHT_STICK_BUTTON = 9;
 		//Analog
 			public static final int LEFT_X = 10;
 			public static final int LEFT_Y = 11;
@@ -155,6 +156,7 @@ public class Scheme
 	 */
 	public void generate()
 	{
+		System.out.println("<=== Generating Controls Image ===>");
 		BufferedImage img = null;
 		try 
 		{
@@ -173,24 +175,39 @@ public class Scheme
 		{
 			if (c != null)
 			{
+				System.out.println("Detected class : \"" + c.getName() + "\"");
+
 				Method[] methods = c.getDeclaredMethods();
-		
 				for (Method m : methods)
 				{
-					Schemas allSchemas = m.getAnnotation(Schemas.class);
+					System.out.println("	Method Detected: " + m.getName());
+					Schema singleSchema = m.getAnnotation(Schema.class); //Only returns non-null for methods with ONE @Schema marker
+					Schemas allSchemas = m.getAnnotation(Schemas.class); //Only methods with multiple @Schema markers have "@SchemaS"
 					if (allSchemas != null)
 					{
 						for (Schema s : allSchemas.value())
 						{
-							System.out.println("Functions Tagged: " + m.getName());
+							System.out.println("		Annotation found at function \"" + m.getName() + "\" in class " + c.getName());
 							if (s.desc().equals(""))
 							{
-								g.drawString(m.getName(), LABEL_BASE_X, LABEL_BASE_Y + (s.value() * LABEL_INCR));
+								g.drawString(m.getName(), LABEL_BASE_X, LABEL_BASE_Y + ((s.value()) * LABEL_INCR));
 							}
 							else
 							{
-								g.drawString(s.desc(), LABEL_BASE_X, LABEL_BASE_Y + (s.value() * LABEL_INCR));
+								g.drawString(s.desc(), LABEL_BASE_X, LABEL_BASE_Y + ((s.value()) * LABEL_INCR));
 							}
+						}
+					}
+					else if (singleSchema != null)
+					{
+						System.out.println("		Annotation found at function \"" + m.getName() + "\" in class " + c.getName());
+						if (singleSchema.desc().equals(""))
+						{
+							g.drawString(m.getName(), LABEL_BASE_X, LABEL_BASE_Y + ((singleSchema.value()) * LABEL_INCR));
+						}
+						else
+						{
+							g.drawString(singleSchema.desc(), LABEL_BASE_X, LABEL_BASE_Y + ((singleSchema.value()) * LABEL_INCR));
 						}
 					}
 				}
@@ -207,5 +224,6 @@ public class Scheme
 	    {
 			e.printStackTrace();
 		}
+	    System.out.println("<=== End Generation ===>");
 	}
 }
