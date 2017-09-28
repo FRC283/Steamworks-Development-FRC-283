@@ -1,6 +1,8 @@
 package org.usfirst.frc.team283.napalm;
 
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CANSpeedController;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Spark;
@@ -14,6 +16,7 @@ import com.ctre.CANTalon;
 
 public class ShooterSubsystem 
 {
+	UsbCamera camera;
 	Hopper hopper;
 	TurretAxis turret;
 	CANTalon flywheelController;
@@ -47,6 +50,7 @@ public class ShooterSubsystem
 	
 	ShooterSubsystem()
 	{
+		this.camera = CameraServer.getInstance().startAutomaticCapture(Constants.TURRET_CAMERA_PORT);
 		this.hopper = new Hopper();
 		this.turret = new TurretAxis(new Spark(Constants.TURRET_CONTROLLER_PORT));
 		turret.addLimits(new DigitalInput(Constants.CCW_LIMIT_SWITCH_PORT), new DigitalInput(Constants.CW_LIMIT_SWITCH_PORT), true);
@@ -71,11 +75,7 @@ public class ShooterSubsystem
 	
 	public void periodic()
 	{
-		SmartDashboard.putNumber("Last Set Flywheel %Power", flywheelController.get());
-		SmartDashboard.putNumber("Last Set Follower Flywheel %Power", flywheelFollower.get());
-		SmartDashboard.putNumber("Encoder Value", flywheelFollower.getEncPosition());
-		SmartDashboard.putNumber("Loop Error", flywheelController.getClosedLoopError());
-		SmartDashboard.putNumber("Flywheel Regular Error", flywheelController.getError());
+		
 		turret.periodic();
 	}
 	
@@ -87,7 +87,7 @@ public class ShooterSubsystem
 	@Schema(value = Scheme.XBOX_RIGHT_Y, desc = "adjust flywheel speed")
 	public void speed(double d) //Cumulatively adjusts flywheel speed based on input
 	{
-		flywheelController.set(Rescaler.deadzone(d, DEADZONE) * MAX_RPM);
+		flywheelController.set(Rescaler.deadzone(d, 0.05) * 0.08 * MAX_RPM);
 		flywheelFollower.set(Constants.FLYWHEEL_CONTROLLER_PORT_A); //Logic ripped from old code.
 	}
 	

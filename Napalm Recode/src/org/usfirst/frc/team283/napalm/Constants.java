@@ -5,7 +5,7 @@ public abstract class Constants
 	//Computer Ports
 		public static final int DRIVER_CONTROLLER_PORT = 0;
 		public static final int OPERATOR_CONTROLLER_PORT = 1;
-	//Controller Ports
+	//Joystick Ports
 		//Buttons
 			public static final int A = 1;
 			public static final int B = 2;
@@ -50,4 +50,7 @@ public abstract class Constants
 		//"Device ID"
 			public static final int FLYWHEEL_CONTROLLER_PORT_A = 0; //Ripped from old C++ code
 			public static final int FLYWHEEL_CONTROLLER_PORT_B = 1; //Ripped from old C++ code
+		//Camera IDs
+			public static final int TURRET_CAMERA_PORT = 0;
+			public static final int GEAR_CAMERA_PORT = 1;
 }

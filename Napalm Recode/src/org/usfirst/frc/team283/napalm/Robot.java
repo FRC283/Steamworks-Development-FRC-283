@@ -13,8 +13,6 @@ public class Robot extends IterativeRobot
 	Joystick xbox;
 	Joystick logitech;
 	
-	//SCOOBYDOOBY sd; //ZIP-ZAP ZAHBAHBAH DOO-DEH DOO-DEE YEAAAAHHHHHH
-	
 	@Override
 	public void robotInit() 
 	{

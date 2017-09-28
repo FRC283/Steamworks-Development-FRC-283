@@ -143,7 +143,7 @@ public class DriveSubsystem
 		if (this.isLeftControlling == false) //Only choose a new target if we dont have a current target
 		{
 			this.leftEnc.reset();
-			this.leftDriveTarget = distance;
+			this.leftDriveTarget = (int)(distance * INCHES_TO_TICKS);
 			this.isLeftControlling = true;
 		}
 		else
@@ -161,7 +161,7 @@ public class DriveSubsystem
 		if (this.isRightControlling == false) //Only choose a new target if we dont have a current target
 		{
 			this.rightEnc.reset();
-			this.rightDriveTarget = distance;
+			this.rightDriveTarget = (int)(distance * INCHES_TO_TICKS);
 			this.isRightControlling = true;
 		}
 		else
