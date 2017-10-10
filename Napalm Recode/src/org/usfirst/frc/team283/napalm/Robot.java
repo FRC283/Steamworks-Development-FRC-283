@@ -56,7 +56,6 @@ public class Robot extends IterativeRobot
 		drivetrain.lift(xbox.getRawAxis(Constants.RIGHT_TRIGGER));
 		drivetrain.shiftGear(logitech.getRawButton(Constants.LEFT_BUMPER));
 		gearSubsystem.pouch(xbox.getRawButton(Constants.RIGHT_BUMPER));
-		//UNKNOWN IF LOCKOUT IS CORRECT
 		gearSubsystem.release(xbox.getRawButton(Constants.LEFT_BUMPER));
 		shooterSubsystem.manualAim(xbox.getRawAxis(Constants.RIGHT_X));
 		shooterSubsystem.speed(xbox.getRawAxis(Constants.RIGHT_Y));

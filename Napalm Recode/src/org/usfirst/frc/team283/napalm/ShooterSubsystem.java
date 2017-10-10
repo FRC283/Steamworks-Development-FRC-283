@@ -25,28 +25,26 @@ public class ShooterSubsystem
 	//Constants
 	/** The speed at which the hopper and feed motors run */
 	private final float FEED_SPEED = 1; 
-	
 	/** The number of encoder ticks per revolution in the flywheel */
 	private final int FLYWHEEL_TICKS = 360; //Ripped from old c++, but that code notes that it's incorrect. Some confusion here.
-	
 	/** Maximum regular flywheel RPM */
 	private final double MAX_FLYWHEEL_RPM = 4000;
-	
 	/** P-Control coefficient for flywheel */
 	private final double FLYWHEEL_P_CONSTANT = 1/(MAX_FLYWHEEL_RPM); //Value of 0.5 from old code.
-	
 	/** Aiming Deadzone for flywheel and axis */
 	private final double DEADZONE = 0.1;
-	
 	/** Take a guess. The expected max rpm cap */
 	private final double MAX_RPM = 5000;
-	
 	/** Max rpm in native units per 100 ms */
 	private final double NATIVE_MAX_RPM = 120; 
-	
 	/** F-Gain scaling based on maximum rpm. Max "power" is 1023. */
 	private final double FLYWHEEL_F_CONSTANT = 1023/NATIVE_MAX_RPM;
 	
+	//Vars
+	/** Change in speed per cycle */
+	private double dSpeed = 0;
+	/** Scales from controller power to dSpeed */
+	private final double DSPEED_CONSTANT = 0.1;
 	
 	ShooterSubsystem()
 	{
@@ -75,7 +73,10 @@ public class ShooterSubsystem
 	
 	public void periodic()
 	{
-		
+		double s = this.dSpeed + (this.flywheelController.getSpeed()/(0.08 * MAX_RPM)); //Add the delta-s to the current rpm. (Has to convert the rpm back to power-units)
+		s = (s < 0) ? 0 : s; //If it's less than 0, 0 it
+		flywheelController.set(s * 0.08 * MAX_RPM); //Rescale for proper values
+		flywheelFollower.set(Constants.FLYWHEEL_CONTROLLER_PORT_A); //Logic ripped from old code.
 		turret.periodic();
 	}
 	
@@ -84,11 +85,14 @@ public class ShooterSubsystem
 		
 	}
 	
+	/**
+	 * Cumulatively adjusts flywheel speed based on input
+	 * @param d - controller magnitude to adjust by
+	 */
 	@Schema(value = Scheme.XBOX_RIGHT_Y, desc = "adjust flywheel speed")
-	public void speed(double d) //Cumulatively adjusts flywheel speed based on input
+	public void speed(double d)
 	{
-		flywheelController.set(Rescaler.deadzone(d, 0.05) * 0.08 * MAX_RPM);
-		flywheelFollower.set(Constants.FLYWHEEL_CONTROLLER_PORT_A); //Logic ripped from old code.
+		this.dSpeed = Rescaler.deadzone(d, 0.05) * this.DSPEED_CONSTANT;
 	}
 	
 	@Schema(value = Scheme.XBOX_RIGHT_X, desc = "control swivel motion of turret")
