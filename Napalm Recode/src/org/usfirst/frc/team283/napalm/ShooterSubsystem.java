@@ -73,9 +73,13 @@ public class ShooterSubsystem
 	
 	public void periodic()
 	{
-		double s = this.dSpeed + (this.flywheelController.getSpeed()/(0.08 * MAX_RPM)); //Add the delta-s to the current rpm. (Has to convert the rpm back to power-units)
+		double s = this.dSpeed + ;//(0.08 * MAX_RPM)); //Add the delta-s to the current rpm. (Has to convert the rpm back to power-units)
+		System.out.println("    flywheelController.get() " + this.flywheelController.get());
+		System.out.println("    Power before RPM Conversion: " + s);
 		s = (s < 0) ? 0 : s; //If it's less than 0, 0 it
+		System.out.println("    Power (s) is now " + s);
 		flywheelController.set(s * 0.08 * MAX_RPM); //Rescale for proper values
+		System.out.println("    FController now set to " + (s * 0.08 * MAX_RPM));
 		flywheelFollower.set(Constants.FLYWHEEL_CONTROLLER_PORT_A); //Logic ripped from old code.
 		turret.periodic();
 	}
@@ -93,6 +97,7 @@ public class ShooterSubsystem
 	public void speed(double d)
 	{
 		this.dSpeed = Rescaler.deadzone(d, 0.05) * this.DSPEED_CONSTANT;
+		System.out.println("    dSpeed = " + this.dSpeed);
 	}
 	
 	@Schema(value = Scheme.XBOX_RIGHT_X, desc = "control swivel motion of turret")
