@@ -23,9 +23,11 @@ public class DriveSubsystem
 	/** calculated through experimentation for the number of ticks per inch */
 	private static final double TICKS_PER_INCH = 63.45;
 	/** Used to proportion the rotation of the robot based on cv_data values */
-	private static final double CENTERING_CONSTANT = .01;
+	private static final double CENTERING_CONSTANT = .003;
 	/** Minimum acceptable error for centering */
 	private static double MIN_CENTERING_ERROR = 10;
+	/** Modifies auto speed as a factor */
+	private static double AUTO_SPEED = 0.125;
 	
 	//Vars
 	/** Stores the previous (last-cycle) value of the gear shift button's state */
@@ -79,7 +81,7 @@ public class DriveSubsystem
 			}
 			else //If we havent reached within the minimum error
 			{
-				leftController.set( -1 * (P_CONSTANT) * lErr); //Scaled by constant	
+				leftController.set(AUTO_SPEED * -1 * (P_CONSTANT) * lErr); //Scaled by constant	
 				System.out.println("Left Motor Value: " +leftController.get());
 			}
 		}
@@ -95,7 +97,7 @@ public class DriveSubsystem
 			}
 			else //If we havent reached within the minimum error
 			{
-				rightController.set( (P_CONSTANT) * rErr); //Scaled by constant	
+				rightController.set(AUTO_SPEED *  (P_CONSTANT) * rErr); //Scaled by constant	
 				System.out.println("Right Motor Value: " + rightController.get());
 			}
 		} 
@@ -103,14 +105,15 @@ public class DriveSubsystem
 		//Centering
 		if (this.isCentering == true)
 		{
-			if (Math.abs(dx) < this.MIN_CENTERING_ERROR) //If within allowable bounds
+			System.out.println("        Current X-Vec" + this.dx);
+			if (Math.abs(dx) < MIN_CENTERING_ERROR) //If within allowable bounds
 			{
 				this.isCentering = false; //Stop the centering
 			}
 			else
 			{
-				double rotaryModifier = this.dx * -this.CENTERING_CONSTANT; //Let our rate of rotation be proportional to the reverse vector
-				rightController.set(rightController.get() + rotaryModifier);
+				double rotaryModifier = this.dx * -CENTERING_CONSTANT; //Let our rate of rotation be proportional to the reverse vector
+				rightController.set(rightController.get() - rotaryModifier);
 				leftController.set(-1 * (leftController.get() + rotaryModifier));
 			}
 		}
@@ -208,8 +211,10 @@ public class DriveSubsystem
 	 * <b>YOU MUST PUT CENTERPERIODIC() IN YOUR PERIODIC FUNCTION</b>
 	 * @return - true if successfully initializes centering
 	 */
+	@Schema(Scheme.RIGHT_BUMPER)
 	public boolean centerInit()
 	{
+		System.out.println("Center Init()");
 		this.isCentering = true;
 		return true;
 	}
