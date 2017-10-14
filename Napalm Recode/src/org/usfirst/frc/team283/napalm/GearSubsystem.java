@@ -52,8 +52,9 @@ public class GearSubsystem
 	 * When the assigned button is pressed, this function controls the robot to release the gear
 	 * When the button is released, it reverses the process
 	 * @param rButtonState - THe button state for this function
+	 * @return - returns true when the gear ejects or the gate closes, false when the gear has not yet ejected or the gate is still waiting
 	 */
-	public void release(boolean rButtonState)
+	public boolean release(boolean rButtonState)
 	{
 		if (rButtonStateBuffer == false && rButtonState == true && pouchSol.get() == false) //Press Event
 		{
@@ -62,24 +63,30 @@ public class GearSubsystem
 				gateSol.set(true); //Open the 'gates' (pincers)
 				pushTimer.start(); //Start waiting
 				pushSequence = true; //Locks other functions in this class
+				rButtonStateBuffer = rButtonState; //Update the buffer to the new position
+				return false;
 			}
 		}
-		if (rButtonStateBuffer == true && rButtonState == true)
+		else if (rButtonStateBuffer == true && rButtonState == true)
 		{
 			if (pushTimer.get() > PUSH_TIME && gateSol.get() == true) //After time has past, and the pincers/gate are open
 			{
 				pushTimer.stop();
 				pushTimer.reset();
 				pushSol.set(true); //Extend push device
+				rButtonStateBuffer = rButtonState; //Update the buffer to the new position
+				return true;
 			}
 		}
-		if (rButtonStateBuffer == true && rButtonState == false) //Release Event
+		else if (rButtonStateBuffer == true && rButtonState == false) //Release Event
 		{
 			pushSol.set(false); //Retract push device
 			pouchSol.set(true); //Open the pouch (Yes, this is unintuitive)
 			closeTimer.start();
+			rButtonStateBuffer = rButtonState; //Update the buffer to the new position
+			return false;
 		}
-		if (rButtonStateBuffer == false && rButtonState == false)
+		else if (rButtonStateBuffer == false && rButtonState == false)
 		{
 			if (closeTimer.get() > CLOSE_TIME) //After time has past
 			{
@@ -88,8 +95,10 @@ public class GearSubsystem
 				gateSol.set(false); //Close the pincers/gate
 				pouchSol.set(false); //CLose the pouch
 				pushSequence = false; //Opens other functions in this class
+				rButtonStateBuffer = rButtonState; //Update the buffer to the new position
+				return true;
 			}
 		}
-		rButtonStateBuffer = rButtonState; //Update the buffer to the new position
+		return false; //Returns false by default
 	}
 }

@@ -66,8 +66,9 @@ public class DriveSubsystem
 	
 	/**
 	 * Called once per cycle to update various values
+	 * @return - returns false when we are NOT left controlling AND NOT right controlling
 	 */
-	public void periodic()
+	public boolean periodic()
 	{
 		//P-Controlling
 		if (this.isLeftControlling == true)
@@ -124,6 +125,7 @@ public class DriveSubsystem
 
 		System.out.println("Encoder Left Read:" + leftEnc.get());
 		System.out.println("Encoder Right Read:" + rightEnc.get());
+		return (this.isLeftControlling && this.isRightControlling); //Returns proper values
 	}
 	
 	@Schema(Scheme.LEFT_Y)

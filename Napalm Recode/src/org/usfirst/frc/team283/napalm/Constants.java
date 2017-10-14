@@ -47,6 +47,10 @@ public abstract class Constants
 			public static final int CCW_LIMIT_SWITCH_PORT = 3;
 			public static final int RIGHT_DRIVE_ENCODER_PORT_A = 7;
 			public static final int RIGHT_DRIVE_ENCODER_PORT_B = 8;
+			//Auto Selector Switches
+			//public static final int AUTO_SWITCH_LEFT = 90;
+			//public static final int AUTO_SWITCH_MIDDLE = 91;
+			//public static final int AUTO_SWITCH_RIGHT = 92;
 		//"Device ID"
 			public static final int FLYWHEEL_CONTROLLER_PORT_A = 0; //Ripped from old C++ code
 			public static final int FLYWHEEL_CONTROLLER_PORT_B = 1; //Ripped from old C++ code
