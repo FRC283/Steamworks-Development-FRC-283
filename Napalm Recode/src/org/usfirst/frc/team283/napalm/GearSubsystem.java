@@ -1,11 +1,14 @@
 package org.usfirst.frc.team283.napalm;
 import org.usfirst.frc.team283.napalm.Scheme.Schema;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 
 public class GearSubsystem 
 {
+	UsbCamera camera;
 	//Solenoids
 	private Solenoid gateSol;
 	private Solenoid pushSol;
@@ -23,6 +26,7 @@ public class GearSubsystem
 	
 	public GearSubsystem()
 	{
+		this.camera = CameraServer.getInstance().startAutomaticCapture(Constants.GEAR_CAMERA_PORT);
 		gateSol = new Solenoid(Constants.GEAR_GATE_SOLENOID_PORT);
 		pushSol = new Solenoid(Constants.GEAR_PUSH_SOLENOID_PORT);
 		pouchSol = new Solenoid(Constants.GEAR_POUCH_SOLENOID_PORT);
@@ -51,7 +55,6 @@ public class GearSubsystem
 	 */
 	public void release(boolean rButtonState)
 	{
-		System.out.println("Push Sequence: " + pushSequence);
 		if (rButtonStateBuffer == false && rButtonState == true && pouchSol.get() == false) //Press Event
 		{
 			if (pouchSol.get() == false) //If the pouch is closed (which it should be)

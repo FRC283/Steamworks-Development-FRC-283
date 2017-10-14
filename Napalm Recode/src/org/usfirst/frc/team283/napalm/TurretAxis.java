@@ -153,6 +153,7 @@ public class TurretAxis
 		this.minLimit = min;
 		this.maxLimit = max;
 		this.normallyClosed = nc;
+		System.out.println("Added 2 limits: " + ((this.minLimit != null) && (this.maxLimit != null)));
 	}
 	
 	public void periodic()
@@ -160,6 +161,7 @@ public class TurretAxis
 		
 		if (this.hasFeedback == true)
 		{
+			System.out.println("");
 			if (this.isCalibrating == true)
 			{
 				if (this.normallyClosed ^ this.minLimit.get())
@@ -215,10 +217,14 @@ public class TurretAxis
 			}
 			
 		} //End of requiring feedback
-		
+		else
+		{
+			System.out.println("TurretAxis Periodic: No feedback (as intended)");
+		}
 		
 		if ((this.maxLimit != null) && (this.minLimit != null))
 		{
+			System.out.println("Limits exist: checking for bad motion");
 			//LIMITING CHECKS
 			if (((this.normallyClosed ^ this.minLimit.get()) && this.power < 0) ||
 			((this.normallyClosed ^ this.maxLimit.get()) && this.power > 0))

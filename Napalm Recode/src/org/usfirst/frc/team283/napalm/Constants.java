@@ -5,7 +5,7 @@ public abstract class Constants
 	//Computer Ports
 		public static final int DRIVER_CONTROLLER_PORT = 0;
 		public static final int OPERATOR_CONTROLLER_PORT = 1;
-	//Controller Ports
+	//Joystick Ports
 		//Buttons
 			public static final int A = 1;
 			public static final int B = 2;
@@ -28,11 +28,12 @@ public abstract class Constants
 		//PWM
 			public static final int LEFT_DRIVE_CONTROLLER_PORT = 0;
 			public static final int RIGHT_DRIVE_CONTROLER_PORT = 1;
-			public static final int TURRET_CONTROLLER_PORT = 3;
-			public static final int HOPPER_CONTROLLER_PORT = 4;
+			//LABELED 'GEARCONVEYOR'
+			public static final int TURRET_CONTROLLER_PORT = 8; //
+			public static final int HOPPER_CONTROLLER_PORT = 4; //Hopper Bottom
 			public static final int CLIMB_CONTROLLER_PORT = 5;
-			public static final int INTAKE_CONTROLLER_PORT = 6;
-			public static final int INFEED_CONTROLLER_PORT = 7;
+			//public static final int INTAKE_CONTROLLER_PORT = 6; //LABELED 'ELEVATOR'
+			public static final int INFEED_CONTROLLER_PORT = 7; //
 		//PCM
 			public static final int SPEED_SHIFT_SOLENOID_PORT = 0;
 			public static final int GEAR_PUSH_SOLENOID_PORT = 1;
@@ -48,5 +49,8 @@ public abstract class Constants
 			public static final int RIGHT_DRIVE_ENCODER_PORT_B = 8;
 		//"Device ID"
 			public static final int FLYWHEEL_CONTROLLER_PORT_A = 0; //Ripped from old C++ code
-			//public static final int FLYWHEEL_CONTROLLER_PORT_B = 1; //Ripped from old C++ code
+			public static final int FLYWHEEL_CONTROLLER_PORT_B = 1; //Ripped from old C++ code
+		//Camera IDs
+			public static final int TURRET_CAMERA_PORT = 0;
+			public static final int GEAR_CAMERA_PORT = 1;
 }
