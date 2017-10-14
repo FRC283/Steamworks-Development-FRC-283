@@ -73,7 +73,7 @@ public class ShooterSubsystem
 	
 	public void periodic()
 	{
-		double s = this.dSpeed + flywheelController.getOutputVoltage()/12;//(0.08 * MAX_RPM)); //Add the delta-s to the current rpm. (Has to convert the rpm back to power-units)
+		double s = this.dSpeed + (flywheelController.getOutputVoltage()/12);//(0.08 * MAX_RPM)); //Add the delta-s to the current rpm. (Has to convert the rpm back to power-units)
 		//System.out.println("    flywheelController.get() " + this.flywheelController.get());
 		//System.out.println("    Power before RPM Conversion: " + s);
 		//System.out.println("    getSpeed" + flywheelController.getSpeed());

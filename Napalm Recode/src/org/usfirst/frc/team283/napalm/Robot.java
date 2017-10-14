@@ -32,7 +32,7 @@ public class Robot extends IterativeRobot
 	/** Controls which autonomous we use
 	 * <br>If you initialize a value here, then that WILL be the autonomous. If you don't it will select based on switches
 	 * */
-	private AutoMode aM;
+	private AutoMode aM = AutoMode.kForwards;
 	
 	@Override
 	public void robotInit() 
@@ -42,17 +42,18 @@ public class Robot extends IterativeRobot
 		shooterSubsystem = new ShooterSubsystem();
 		cvData = NetworkTable.getTable("cv_data");
 		autoTimer = new Timer();
-		autoSwitches[0] = new DigitalInput(Constants.AUTO_SWITCH_LEFT); //Left, middle and right switches
-		autoSwitches[1] = new DigitalInput(Constants.AUTO_SWITCH_MIDDLE);
-		autoSwitches[2] = new DigitalInput(Constants.AUTO_SWITCH_RIGHT);
+		//autoSwitches[0] = new DigitalInput(Constants.AUTO_SWITCH_LEFT); //Left, middle and right switches
+		//autoSwitches[1] = new DigitalInput(Constants.AUTO_SWITCH_MIDDLE);
+		//autoSwitches[2] = new DigitalInput(Constants.AUTO_SWITCH_RIGHT);
 		logitech = new Joystick(Constants.DRIVER_CONTROLLER_PORT);
 		xbox = new Joystick(Constants.OPERATOR_CONTROLLER_PORT);
 	}
 	@Override
 	public void autonomousInit()
 	{
-		if (aM == null) //If no value for aM was defined
+		/*if (aM == null) //If no value for aM was defined
 		{
+			System.out.println("No value for autoMode was defined. Checking switches...");
 			//All three switches off
 			if (autoSwitches[0].get() == false && autoSwitches[1].get() == false && autoSwitches[2].get() == false)
 				aM = AutoMode.kDone;
@@ -63,7 +64,11 @@ public class Robot extends IterativeRobot
 			if (autoSwitches[0].get() == false && autoSwitches[1].get() == true && autoSwitches[2].get() == false)
 				aM = AutoMode.kForwardGear;
 		}
-		
+		else
+		{
+			System.out.println("autoMode was defined as =" + aM);
+		}
+		*/
 		autoTimer.reset();
 		autoTimer.start(); //Reset and start the auto timer so that if the first step requires waiting it can wait
 	}
