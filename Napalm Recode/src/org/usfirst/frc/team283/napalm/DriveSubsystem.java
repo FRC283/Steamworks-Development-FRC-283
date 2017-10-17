@@ -27,7 +27,7 @@ public class DriveSubsystem
 	/** Minimum acceptable error for centering */
 	private static double MIN_CENTERING_ERROR = 10;
 	/** Modifies auto speed as a factor */
-	private static double AUTO_SPEED = 0.125;
+	private static double AUTO_SPEED = 0.15;
 	
 	//Vars
 	/** Stores the previous (last-cycle) value of the gear shift button's state */
@@ -125,6 +125,7 @@ public class DriveSubsystem
 
 		System.out.println("Encoder Left Read:" + leftEnc.get());
 		System.out.println("Encoder Right Read:" + rightEnc.get());
+		SmartDashboard.putBoolean("HIGH GEAR ENABLED: ", gearShift.get());
 		return (this.isLeftControlling && this.isRightControlling); //Returns proper values
 	}
 	

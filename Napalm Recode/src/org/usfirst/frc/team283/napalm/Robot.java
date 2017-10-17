@@ -13,7 +13,7 @@ public class Robot extends IterativeRobot
 	ShooterSubsystem shooterSubsystem;
 	Joystick xbox;
 	Joystick logitech;
-	NetworkTable cvData;
+	//NetworkTable cvData;
 	
 	//Autonomous Vars
 	/** Holds the values of the triple switches on the side of the robot */
@@ -40,7 +40,7 @@ public class Robot extends IterativeRobot
 		drivetrain = new DriveSubsystem();
 		gearSubsystem = new GearSubsystem();
 		shooterSubsystem = new ShooterSubsystem();
-		cvData = NetworkTable.getTable("cv_data");
+		//cvData = NetworkTable.getTable("cv_data");
 		autoTimer = new Timer();
 		//autoSwitches[0] = new DigitalInput(Constants.AUTO_SWITCH_LEFT); //Left, middle and right switches
 		//autoSwitches[1] = new DigitalInput(Constants.AUTO_SWITCH_MIDDLE);
