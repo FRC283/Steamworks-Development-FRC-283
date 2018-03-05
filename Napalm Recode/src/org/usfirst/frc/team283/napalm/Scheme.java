@@ -161,7 +161,7 @@ public class Scheme
 		try 
 		{
 		    img = ImageIO.read(new File("ControlsSchemaBase.png"));
-		} 
+		}
 		catch (IOException e) 
 		{
 			e.printStackTrace();

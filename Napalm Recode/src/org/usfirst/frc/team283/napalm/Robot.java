@@ -10,7 +10,7 @@ public class Robot extends IterativeRobot
 {
 	DriveSubsystem drivetrain;
 	GearSubsystem gearSubsystem;
-	ShooterSubsystem shooterSubsystem;
+	//ShooterSubsystem shooterSubsystem;
 	Joystick xbox;
 	Joystick logitech;
 	//NetworkTable cvData;
@@ -39,7 +39,7 @@ public class Robot extends IterativeRobot
 	{
 		drivetrain = new DriveSubsystem();
 		gearSubsystem = new GearSubsystem();
-		shooterSubsystem = new ShooterSubsystem();
+		//shooterSubsystem = new ShooterSubsystem();
 		//cvData = NetworkTable.getTable("cv_data");
 		autoTimer = new Timer();
 		//autoSwitches[0] = new DigitalInput(Constants.AUTO_SWITCH_LEFT); //Left, middle and right switches
@@ -76,7 +76,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousPeriodic() 
 	{
-		System.out.println("AUTONOMOUS STATUS:");
+		/*System.out.println("AUTONOMOUS STATUS:");
 		System.out.println("    autoMode = " + aM);
 		System.out.println("    autoStep = " + autoStep);
 		switch (aM) //Executes an autonomous based on the values of aM
@@ -133,8 +133,8 @@ public class Robot extends IterativeRobot
 					break;
 					case 5:
 						 if (drivetrain.periodic() == false) //Wait for the forward motion to finish (When it is false, it is done)
-						 {
-							 autoStep++; //When we reach target, advance step
+						 { 
+							 autoStep++;//When we reach target, advance step
 						 }
 					case 6:
 						//Finished.
@@ -143,7 +143,7 @@ public class Robot extends IterativeRobot
 			break;
 			case kDone:
 			break;
-		}
+		}*/
 	}
 	
 	@Override
@@ -160,12 +160,12 @@ public class Robot extends IterativeRobot
 		drivetrain.shiftGear(logitech.getRawButton(Constants.LEFT_BUMPER));
 		gearSubsystem.pouch(xbox.getRawButton(Constants.RIGHT_BUMPER));
 		gearSubsystem.release(xbox.getRawButton(Constants.LEFT_BUMPER));
-		shooterSubsystem.manualAim(xbox.getRawAxis(Constants.RIGHT_X));
-		shooterSubsystem.speed(xbox.getRawAxis(Constants.RIGHT_Y));
-		shooterSubsystem.feedIn(xbox.getRawAxis(Constants.LEFT_X), xbox.getRawAxis(Constants.LEFT_Y));
+		//shooterSubsystem.manualAim(xbox.getRawAxis(Constants.RIGHT_X));
+		//shooterSubsystem.speed(xbox.getRawAxis(Constants.RIGHT_Y));
+		//shooterSubsystem.feedIn(xbox.getRawAxis(Constants.LEFT_X), xbox.getRawAxis(Constants.LEFT_Y));
 		
 		//Periodics
-		shooterSubsystem.periodic();
+		//shooterSubsystem.periodic();
 		drivetrain.periodic();
 		
 		//Printouts:
