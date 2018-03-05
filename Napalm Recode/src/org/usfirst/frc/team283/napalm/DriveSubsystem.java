@@ -131,7 +131,7 @@ public class DriveSubsystem
 	
 	@Schema(Scheme.LEFT_Y)
 	@Schema(Scheme.RIGHT_Y)
-	@Schema(value = Scheme.RIGHT_TRIGGER, desc = SLOWSPEED + " speed")
+	@Schema(value = Scheme.RIGHT_BUMPER, desc = SLOWSPEED + " speed")
 	/**
 	 * 
 	 * @param leftMagnitude
@@ -141,8 +141,8 @@ public class DriveSubsystem
 	 */
 	public void drive(double leftMagnitude, double rightMagnitude, boolean slowSpeed, boolean setZero)
 	{
-		leftController.set(-1 * (Rescaler.rescale(DEADZONE, 1.0, 0.0, 1.0, leftMagnitude)) * (slowSpeed ? SLOWSPEED : 1));
-		rightController.set( (Rescaler.rescale(DEADZONE, 1.0, 0.0, 1.0, rightMagnitude)) * (slowSpeed ? SLOWSPEED : 1));
+		leftController.set(-1 * leftMagnitude * (slowSpeed ? SLOWSPEED : 1));
+		rightController.set(rightMagnitude * (slowSpeed ? SLOWSPEED : 1));
 		if(setZero == true)
 		{
 			leftEnc.reset();
@@ -150,7 +150,7 @@ public class DriveSubsystem
 		}
 	}
 	
-	@Schema(Scheme.LEFT_BUMPER)
+	@Schema(Scheme.RIGHT_STICK_BUTTON)
 	/**
 	 * 
 	 * @param gearButtonState
@@ -215,7 +215,6 @@ public class DriveSubsystem
 	 * <b>YOU MUST PUT CENTERPERIODIC() IN YOUR PERIODIC FUNCTION</b>
 	 * @return - true if successfully initializes centering
 	 */
-	@Schema(Scheme.RIGHT_BUMPER)
 	public boolean centerInit()
 	{
 		System.out.println("Center Init()");

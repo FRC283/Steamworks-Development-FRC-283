@@ -23,7 +23,7 @@ public class Scheme
 {
 	public static void main(String[] args)
 	{
-		Scheme s = new Scheme("Napalm", "org.usfirst.frc.team283.napalm.DriveSubsystem", "org.usfirst.frc.team283.napalm.GearSubsystem", "org.usfirst.frc.team283.napalm.ShooterSubsystem");
+		Scheme s = new Scheme("Napalm", "org.usfirst.frc.team283.napalm.DriveSubsystem", "org.usfirst.frc.team283.napalm.GearSubsystem");
 		s.generate();
 	}
 	
