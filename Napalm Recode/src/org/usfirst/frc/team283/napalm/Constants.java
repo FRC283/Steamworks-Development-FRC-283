@@ -29,18 +29,19 @@ public abstract class Constants
 		//PWM
 			public static final int LEFT_DRIVE_CONTROLLER_PORT = 0;
 			public static final int RIGHT_DRIVE_CONTROLER_PORT = 1;
-			//LABELED 'GEARCONVEYOR'
-			public static final int TURRET_CONTROLLER_PORT = 8; //
+			public static final int GEAR_CONVEYOR_CONTROLLER_PORT = 2; //LABELED 'GEARCONVEYOR', NOT IN USE
+			public static final int INTAKE_CONTROLLER_PORT = 9; //UNUSED WIRE LABELED 'INTAKE'
+			public static final int TURRET_CONTROLLER_PORT = 6; //
 			public static final int HOPPER_CONTROLLER_PORT = 4; //Hopper Bottom
 			public static final int CLIMB_CONTROLLER_PORT = 5;
-			//public static final int INTAKE_CONTROLLER_PORT = 6; //LABELED 'ELEVATOR'
+			//public static final int MISC_CONTROLLER_PORT = 3; //Not used to control anything
 			public static final int INFEED_CONTROLLER_PORT = 7; //
+			public static final int FLYWHEEL_CONTROLLER_PORT_TWO = 8; //TEMP FIX! Labeled Elevator
 		//PCM
 			public static final int SPEED_SHIFT_SOLENOID_PORT = 0;
 			public static final int GEAR_PUSH_SOLENOID_PORT = 1;
 			public static final int GEAR_POUCH_SOLENOID_PORT = 2;
-			public static final int GEAR_GATE_SOLENOID_PORT = 3;
-			public static final int HOOD_DEFLECTOR_SOLENOID_PORT = 4;
+			public static final int GEAR_GATE_SOLENOID_PORT = 3; //LABELED 'GEAR RELEASE'
 		//DIO
 			public static final int LEFT_DRIVE_ENCODER_PORT_A = 0;
 			public static final int LEFT_DRIVE_ENCODER_PORT_B = 1;

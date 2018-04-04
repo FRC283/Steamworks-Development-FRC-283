@@ -27,7 +27,7 @@ public class GearSubsystem
 	public GearSubsystem()
 	{
 		this.camera = CameraServer.getInstance().startAutomaticCapture(Constants.GEAR_CAMERA_PORT);
-		gateSol = new Solenoid(Constants.GEAR_GATE_SOLENOID_PORT);
+		//gateSol = new Solenoid(Constants.GEAR_GATE_SOLENOID_PORT);
 		pushSol = new Solenoid(Constants.GEAR_PUSH_SOLENOID_PORT);
 		pouchSol = new Solenoid(Constants.GEAR_POUCH_SOLENOID_PORT);
 		pushTimer = new Timer();

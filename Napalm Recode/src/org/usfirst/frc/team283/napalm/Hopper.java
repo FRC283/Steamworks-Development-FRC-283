@@ -26,6 +26,7 @@ public class Hopper
 	public void hopperPower( double hopperMag)
 	{//rescale
 		this.hopperController.set(Rescaler.deadzone(hopperMag, DEADZONE));
+		System.out.println("Setting hopper to: " + hopperController.get());
 	}
 	
 	/**
@@ -35,5 +36,6 @@ public class Hopper
 	public void infeedPower(double infeedMag)
 	{//rescale
 		this.infeedController.set(Rescaler.deadzone(infeedMag, DEADZONE));
+		System.out.println("Setting infeed to: " + infeedController.get());
 	}
 }

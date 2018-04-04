@@ -324,6 +324,7 @@ public class TurretAxis
 	{
 		this.power = p;
 		this.isPowerControlling = true;
+		System.out.println("Setting turret power to " + controller.get());
 	}
 	
 	/**
