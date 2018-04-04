@@ -30,12 +30,12 @@ public abstract class Constants
 			public static final int LEFT_DRIVE_CONTROLLER_PORT = 0;
 			public static final int RIGHT_DRIVE_CONTROLER_PORT = 1;
 			public static final int GEAR_CONVEYOR_CONTROLLER_PORT = 2; //LABELED 'GEARCONVEYOR', NOT IN USE
-			public static final int INTAKE_CONTROLLER_PORT = 9; //UNUSED WIRE LABELED 'INTAKE'
-			public static final int TURRET_CONTROLLER_PORT = 6; //
+			public static final int INTAKE_CONTROLLER_PORT = 6; //
+			public static final int TURRET_CONTROLLER_PORT = 3; //Spark labeled 'INTAKE' - used to control turret swivel
 			public static final int HOPPER_CONTROLLER_PORT = 4; //Hopper Bottom
 			public static final int CLIMB_CONTROLLER_PORT = 5;
 			//public static final int MISC_CONTROLLER_PORT = 3; //Not used to control anything
-			public static final int INFEED_CONTROLLER_PORT = 7; //
+			public static final int INFEED_CONTROLLER_PORT = 9; //
 			public static final int FLYWHEEL_CONTROLLER_PORT_TWO = 8; //TEMP FIX! Labeled Elevator
 		//PCM
 			public static final int SPEED_SHIFT_SOLENOID_PORT = 0;

@@ -14,7 +14,7 @@ public class ShooterSubsystem
 {
 	UsbCamera camera;
 	Hopper hopper;
-	TurretAxis turret;
+	Spark turretController;
 	Spark flywheelController;
 	//CANTalon flywheelFollower; //Provides extra power to the flywheel. Mirrors the main controller
 	
@@ -46,44 +46,13 @@ public class ShooterSubsystem
 	{
 		this.camera = CameraServer.getInstance().startAutomaticCapture(Constants.TURRET_CAMERA_PORT);
 		this.hopper = new Hopper();
-		this.turret = new TurretAxis(new Spark(Constants.TURRET_CONTROLLER_PORT));
-		turret.addLimits(new DigitalInput(Constants.CCW_LIMIT_SWITCH_PORT), new DigitalInput(Constants.CW_LIMIT_SWITCH_PORT), true);
-		turret.reverseController();
 		flywheelController = new Spark(Constants.FLYWHEEL_CONTROLLER_PORT_TWO);
-		//flywheelFollower = new CANTalon(Constants.FLYWHEEL_CONTROLLER_PORT_B);
-		
-		//flywheelController.setControlMode(TalonControlMode.Speed.getValue());
-		//flywheelController.setControlMode(TalonControlMode.PercentVbus.getValue());
-		//flywheelController.configNominalOutputVoltage(+0.0f, -0.0f);
-        //flywheelController.configPeakOutputVoltage(+12.0f, -12.0f);
-		
-		
-		//flywheelFollower.setControlMode(ControlMode.Follower);
-		//flywheelController.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
-		//flywheelController.configEncoderCodesPerRev(FLYWHEEL_TICKS);
-		//flywheelController.setP(FLYWHEEL_P_CONSTANT);
-		//flywheelController.setI(0);
-		//flywheelController.setD(0);
-		//flywheelController.setF(FLYWHEEL_F_CONSTANT);
-		//flywheelController.configNominalOutputForward(0, 0);
-		//flywheelController.configPeakOutputReverse(1, 0);
+		turretController = new Spark(Constants.TURRET_CONTROLLER_PORT);
 	}
 	
 	public void periodic()
 	{
-		//double s = this.dSpeed + (flywheelController.getOutputVoltage()/12);//(0.08 * MAX_RPM)); //Add the delta-s to the current rpm. (Has to convert the rpm back to power-units)
-		//System.out.println("    flywheelController.get() " + this.flywheelController.get());
-		//System.out.println("    Power before RPM Conversion: " + s);
-		//System.out.println("    getSpeed" + flywheelController.getSpeed());
-		//System.out.println("    getOutputVoltage" + flywheelController.getOutputVoltage());
-		//System.out.println("    getOutputVoltage" + flywheelController.getError());
 		
-		//s = (s < 0) ? 0 : s; //If it's less than 0, 0 it
-		//System.out.println("    Power (s) is now " + s);
-		//flywheelController.set(s);// * 0.08 * MAX_RPM); //Rescale for proper values
-		//System.out.println("    FController now set to " + (s * 0.08 * MAX_RPM));
-		//flywheelFollower.set(Constants.FLYWHEEL_CONTROLLER_PORT_A); //Logic ripped from old code.
-		turret.periodic();
 	}
 	
 	/**
@@ -117,14 +86,14 @@ public class ShooterSubsystem
 	public void manualAim(double axisInput)
 	{
 		SmartDashboard.putNumber("Swivel Value", axisInput);
-		turret.setPower(Rescaler.deadzone(axisInput, DEADZONE));
+		turretController.set(axisInput);
 	}
 	
 	@Schema(value = Scheme.XBOX_LEFT_Y, desc = "roll balls into flywheel")
 	@Schema(value = Scheme.XBOX_LEFT_X, desc = "roll balls second queue")
 	public void feedIn(double infeedMag, double intakeMag)
 	{
-		this.hopper.infeedPower(infeedMag);
+		this.hopper.infeedPower(-1 * infeedMag);
 		this.hopper.hopperPower(-1 * intakeMag);
 	}
 }
